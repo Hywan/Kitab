@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <base href="./../../../" />
+        <title>Kitab\Compiler\IntermediateRepresentation\Parameter from Kitab</title>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <meta http-equiv="content-type" content="text/javascript; charset=utf-8" />
+        <meta http-equiv="content-type" content="text/css; charset=utf-8" />
+        <meta name="viewport" content="initial-scale=1.0" />
+
+        <link rel="stylesheet" href="./css/main.css" media="all" />
+        <link rel="stylesheet" href="./css/prism.css" media="all" />
+    </head>
+    <body>
+        <div id="search" role="search">
+            <div>
+                <input type="search" placeholder="Initializing search…" disabled />
+            </div>
+        </div>
+
+        <main>
+            <aside>
+    <header>
+        <a href="./">
+            <img src="https://placehold.it/150x150" alt="Home" />
+        </a>
+    </header>
+
+    <nav>
+        <h1><code><a href="./kitab/index.html">Kitab</a>\<wbr /><a href="./kitab/compiler/index.html">Compiler</a>\<wbr /><a href="./kitab/compiler/intermediaterepresentation/index.html">IntermediateRepresentation</a></code></h1>
+
+                    <h2>Classes</h2>
+
+            <ul class="list--flat">
+                                    <li><a href="./kitab/compiler/intermediaterepresentation/Attribute.html"><code>Attribute</code></a></li>
+                                    <li><a href="./kitab/compiler/intermediaterepresentation/Class_.html"><code>Class_</code></a></li>
+                                    <li><a href="./kitab/compiler/intermediaterepresentation/Constant.html"><code>Constant</code></a></li>
+                                    <li><a href="./kitab/compiler/intermediaterepresentation/Documentation.html"><code>Documentation</code></a></li>
+                                    <li><a href="./kitab/compiler/intermediaterepresentation/Entity.html"><code>Entity</code></a></li>
+                                    <li><a href="./kitab/compiler/intermediaterepresentation/File.html"><code>File</code></a></li>
+                                    <li><a href="./kitab/compiler/intermediaterepresentation/Function_.html"><code>Function_</code></a></li>
+                                    <li><a href="./kitab/compiler/intermediaterepresentation/Interface_.html"><code>Interface_</code></a></li>
+                                    <li><a href="./kitab/compiler/intermediaterepresentation/Into.html"><code>Into</code></a></li>
+                                    <li><a href="./kitab/compiler/intermediaterepresentation/Method.html"><code>Method</code></a></li>
+                                    <li><a href="./kitab/compiler/intermediaterepresentation/Parameter.html"><code>Parameter</code></a></li>
+                                    <li><a href="./kitab/compiler/intermediaterepresentation/Trait_.html"><code>Trait_</code></a></li>
+                                    <li><a href="./kitab/compiler/intermediaterepresentation/Type.html"><code>Type</code></a></li>
+                            </ul>
+        
+                    <h2>Interfaces</h2>
+
+            <ul class="list--flat">
+                                    <li><a href="./kitab/compiler/intermediaterepresentation/HasMethods.html"><code>HasMethods</code></a></li>
+                            </ul>
+        
+        
+            </nav>
+</aside>
+
+<article>
+    <h1>
+    Class <code>Kitab\Compiler\IntermediateRepresentation\Parameter</code>
+    <aside>
+        <a href="./kitab/compiler/intermediaterepresentation/Parameter.source.html#L.64-113" title="View source">[src]</a>
+    </aside>
+</h1>
+
+<pre><code class="language-php">class Parameter
+{
+    public function __construct(string $name);
+    public function __toString(): string;
+}</code></pre>
+
+<section class="entity__description"><p>A parameter intermediate representation.</p>
+<p>A parameter of a function (or method) receives an argument. It takes the
+form of a variable with a type and a default value. A parameter can be
+variadic if it is in the last position of the list of parameters: It means
+it will receive all extra arguments given to the function.</p>
+<h1>Examples</h1>
+<p>The following example represent the parameter <code>int $foo = 42</code>:</p>
+<pre><code class="language-php">$typeInt       = new Kitab\Compiler\IntermediateRepresentation\Type();
+$typeInt-&gt;name = 'int';
+
+$parameter        = new Kitab\Compiler\IntermediateRepresentation\Parameter('x');
+$parameter-&gt;type  = $typeInt;
+$parameter-&gt;name  = 'foo';
+$parameter-&gt;value = '42';
+</code></pre>
+</section>
+
+
+    <h2 id="attributes">Attributes</h2>
+
+    <dl class="entity__children">
+                    <dt aria-label="type"><code class="language-php">public $type = null;</code></dt>
+            <dd>
+                <section><p>Type of the parameter. See <a href="./kitab/compiler/intermediaterepresentation/Type.html"><code>Kitab\Compiler\IntermediateRepresentation\Type</code></a>.</p>
+</section>
+            </dd>
+                    <dt aria-label="name"><code class="language-php">public $name</code></dt>
+            <dd>
+                <section><p>Name of the parameter, without the leading <code>$</code>.</p>
+</section>
+            </dd>
+                    <dt aria-label="variadic"><code class="language-php">public $variadic = false;</code></dt>
+            <dd>
+                <section><p>A variadic parameter receives all the extra arguments given to the
+function. It must be the last parameter of the list of parameters. It
+is represented by the <code>...</code> symbol.</p>
+</section>
+            </dd>
+                    <dt aria-label="value"><code class="language-php">public $value = null;</code></dt>
+            <dd>
+                <section><p>A string containing only PHP code representing the default value of the parameter if any.
+A default value for the</p>
+</section>
+            </dd>
+            </dl>
+
+    <h2 id="methods">Methods</h2>
+
+    <dl class="entity__children">
+                    <dt aria-label="__construct">
+                <code class="language-php">public function __construct(string $name)</code>
+                <aside><a href="./kitab/compiler/intermediaterepresentation/Parameter.source.html#L.92-95" title="View source of the `__construct` method">[src]</a></aside>
+            </dt>
+            <dd>
+                <section><p>Allocate a parameter with a name. This is the only mandatory information.</p>
+</section>
+            </dd>
+                    <dt aria-label="__toString">
+                <code class="language-php">public function __toString(): string</code>
+                <aside><a href="./kitab/compiler/intermediaterepresentation/Parameter.source.html#L.103-112" title="View source of the `__toString` method">[src]</a></aside>
+            </dt>
+            <dd>
+                <section><p>Transform the intermediate representation into its PHP representation.</p>
+<p>The original formatting is not kept. The applied formatting is designed
+for Kitab.</p>
+</section>
+            </dd>
+            </dl>
+
+</article>
+        </main>
+
+        <script type="text/javascript" src="./javascript/search.elm.js"></script>
+        <script type="text/javascript" src="./javascript/search-index.js"></script>
+        <script type="text/javascript" src="./javascript/search-metadata.js"></script>
+        <script type="text/javascript" src="./javascript/application.js"></script>
+        <script type="text/javascript" src="./javascript/prism.js"></script>
+        <script type="text/javascript" src="./javascript/prism-hooks.js" async defer></script>
+    </body>
+</html>

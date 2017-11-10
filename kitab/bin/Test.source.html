@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <base href="./../../" />
+        <title>Source of Kitab\Bin\Test from Kitab</title>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <meta http-equiv="content-type" content="text/javascript; charset=utf-8" />
+        <meta http-equiv="content-type" content="text/css; charset=utf-8" />
+        <meta name="viewport" content="initial-scale=1.0" />
+
+        <link rel="stylesheet" href="./css/main.css" media="all" />
+        <link rel="stylesheet" href="./css/prism.css" media="all" />
+    </head>
+    <body>
+        <div id="search" role="search">
+            <div>
+                <input type="search" placeholder="Initializing search…" disabled />
+            </div>
+        </div>
+
+        <main>
+            <aside>
+    <header>
+        <a href="./">
+            <img src="https://placehold.it/150x150" alt="Home" />
+        </a>
+    </header>
+</aside>
+
+<article>
+    <pre id="L" data-line="," class="line-numbers"><code class="language-php no-wrap-hooks">&lt;?php
+
+declare(strict_types=1);
+
+/**
+ * Hoa
+ *
+ *
+ * @license
+ *
+ * New BSD License
+ *
+ * Copyright © 2007-2017, Hoa community. All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * Neither the name of the Hoa nor the names of its contributors may be
+ *       used to endorse or promote products derived from this software without
+ *       specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot;
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS AND CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ */
+
+namespace Kitab\Bin;
+
+use Hoa\Console;
+use Hoa\Console\Processus;
+use Hoa\Event;
+use Hoa\File;
+use Hoa\File\Temporary\Temporary;
+use Hoa\Protocol\Protocol;
+use Kitab\Compiler\Compiler;
+use Kitab\Compiler\Target\DocTest\DocTest;
+use Kitab\Finder;
+
+class Test extends Console\Dispatcher\Kit
+{
+    /**
+     * Options description.
+     */
+    protected $options = [
+        ['autoloader',           Console\GetOption::REQUIRED_ARGUMENT, 'l'],
+        ['output-directory',     Console\GetOption::REQUIRED_ARGUMENT, 'o'],
+        ['concurrent-processes', Console\GetOption::REQUIRED_ARGUMENT, 'p'],
+        ['verbose',              Console\GetOption::NO_ARGUMENT,       'v'],
+        ['help',                 Console\GetOption::NO_ARGUMENT,       'h'],
+        ['help',                 Console\GetOption::NO_ARGUMENT,       '?']
+    ];
+
+
+
+    /**
+     * The entry method.
+     */
+    public function run(): int
+    {
+        $autoloader          = null;
+        $outputDirectory     = null;
+        $directoryToScan     = null;
+        $concurrentProcesses = 4;
+        $verbose             = false;
+
+        while (false !== $c = $this-&gt;getOption($v)) {
+            switch ($c) {
+                case 'o':
+                    $outputDirectory = $v;
+
+                    break;
+
+                case 'l':
+                    $autoloader = $v;
+
+                    if (false === file_exists($autoloader)) {
+                        throw new \RuntimeException('Autoloader file `' . $autoloader . '` does not exist.');
+                    }
+
+                    break;
+
+                case 'p':
+                    $concurrentProcesses = max(1, intval($v));
+
+                    break;
+
+                case 'v':
+                    $verbose = $v;
+
+                    break;
+
+                case 'h':
+                case '?':
+                    $this-&gt;usage();
+
+                    return 0;
+
+                case '__ambiguous':
+                    $this-&gt;resolveOptionAmbiguity($v);
+
+                    break;
+            }
+        }
+
+        if (empty($autoloader) &amp;&amp; true === file_exists('vendor' . DS . 'autoload.php')) {
+            $autoloader = realpath('vendor' . DS . 'autoload.php');
+        }
+
+        $this-&gt;parser-&gt;listInputs($directoryToScan);
+
+        if (empty($directoryToScan)) {
+            throw new \RuntimeException(
+                'Directory to scan must not be empty.' . &quot;\n&quot; .
+                'Retry with `' . implode(' ', $_SERVER['argv']) . ' src` ' .
+                'to test the documentation inside the `src` directory.'
+            );
+        }
+
+        if (false === is_dir($directoryToScan)) {
+            throw new \RuntimeException(
+                'Directory to scan `' . $directoryToScan . '` does not exist.'
+            );
+        }
+
+        if (null === $outputDirectory) {
+            $outputDirectory = Temporary::getTemporaryDirectory() . DS . 'Kitab.test.output' . DS . hash('sha256', realpath($directoryToScan)). DS;
+        }
+
+        Protocol::getInstance()['Kitab']['Output']-&gt;setReach(&quot;\r&quot; . $outputDirectory . DS);
+
+        if (true === $verbose) {
+            echo
+                'Directory to scan: ', $directoryToScan, &quot;\n&quot;,
+                'Output directory : ', $outputDirectory, &quot;\n&quot;;
+        }
+
+        $finder = new Finder();
+        $finder
+            -&gt;in($directoryToScan)
+            -&gt;notIn('/^vendor$/');
+
+        if (is_dir($outputDirectory)) {
+            $since = time() - filemtime($outputDirectory);
+            $finder-&gt;modified('since ' . $since . ' seconds');
+        } else {
+            File\Directory::create($outputDirectory);
+        }
+
+        $target = new DocTest();
+
+        $compiler = new Compiler();
+        $compiler-&gt;compile($finder, $target);
+        $command = $_SERVER['argv'][0] . ' atoum';
+
+        if (defined('KITAB_PHAR_NAME')) {
+            $temporaryAutoloaderPath = $outputDirectory . '.kitab.phar.autoloader.php';
+            touch($temporaryAutoloaderPath);
+
+            $temporaryAutoloader = new File\Write($temporaryAutoloaderPath, File::MODE_TRUNCATE_WRITE);
+            $temporaryAutoloader-&gt;writeAll(
+                '&lt;?php' . &quot;\n\n&quot; .
+                'Phar::loadPhar(\'' . KITAB_PHAR_PATH . '\', \'' . KITAB_PHAR_NAME . '\');' . &quot;\n\n&quot; .
+                'require_once \'phar://'. KITAB_PHAR_NAME .'/vendor/autoload.php\';' . &quot;\n&quot; .
+                (!empty($autoloader) ? 'require_once \'' . str_replace(&quot;'&quot;, &quot;\\'&quot;, realpath($autoloader)) . '\';' : '')
+            );
+
+            $autoloader = $temporaryAutoloader-&gt;getStreamName();
+        } else {
+            $composerAutoloader = realpath(dirname(__DIR__, 4) . DS . 'autoload.php');
+
+            if (false === $composerAutoloader) {
+                $composerAutoloader = realpath(dirname(__DIR__, 2) . DS . 'vendor' . DS . 'autoload.php');
+            }
+
+            $temporaryAutoloaderPath = $outputDirectory . '.kitab.autoloader.php';
+            touch($temporaryAutoloaderPath);
+
+            $temporaryAutoloader = new File\Write($temporaryAutoloaderPath, File\File::MODE_TRUNCATE_WRITE);
+            $temporaryAutoloader-&gt;writeAll(
+                '&lt;?php' . &quot;\n\n&quot; .
+                'require_once \'' . str_replace(&quot;'&quot;, &quot;\\'&quot;, $composerAutoloader) . '\';' . &quot;\n&quot; .
+                (!empty($autoloader) ? 'require_once \'' . str_replace(&quot;'&quot;, &quot;\\'&quot;, realpath($autoloader)) . '\';' : '')
+            );
+
+            $autoloader = $temporaryAutoloader-&gt;getStreamName();
+        }
+
+        if (true === $verbose) {
+            $command .= ' ++verbose';
+        }
+
+        $command .=
+            ' --autoloader-file ' .
+                escapeshellarg($autoloader) .
+            ' --force-terminal' .
+            ' --no-code-coverage' .
+            ' --max-children-number ' .
+                $concurrentProcesses .
+            ' --directories ' .
+                escapeshellarg($outputDirectory);
+
+        $processus = new Processus($command, null, null, getcwd(), $_SERVER);
+        $processus-&gt;on(
+            'input',
+            function (Event\Bucket $bucket) {
+                return false;
+            }
+        );
+        $processus-&gt;on(
+            'output',
+            function (Event\Bucket $bucket) {
+                echo $bucket-&gt;getData()['line'], &quot;\n&quot;;
+
+                return;
+            }
+        );
+        $processus-&gt;on(
+            'stop',
+            function (Event\Bucket $bucket) {
+                // Wait on sub-processes to stop.
+                sleep(1);
+                exit($bucket-&gt;getSource()-&gt;getExitCode());
+            }
+        );
+        $processus-&gt;run();
+
+        return 0;
+    }
+
+    /**
+     * Print help.
+     */
+    public function usage()
+    {
+        echo
+            'Usage   : test &lt;options&gt; directory-to-scan', &quot;\n&quot;,
+            'Options :', &quot;\n&quot;,
+            $this-&gt;makeUsageOptionsList([
+                'l'    =&gt; 'Path to the autoloader file.',
+                'o'    =&gt; 'Directory that will receive the generated documentation test suites.',
+                'p'    =&gt; 'Maximum concurrent processes that can run.',
+                'v'    =&gt; 'Be verbose (add some debug information).',
+                'help' =&gt; 'This help.'
+            ]);
+    }
+}
+</code></pre>
+</article>
+        </main>
+
+        <script type="text/javascript" src="./javascript/search.elm.js"></script>
+        <script type="text/javascript" src="./javascript/search-index.js"></script>
+        <script type="text/javascript" src="./javascript/search-metadata.js"></script>
+        <script type="text/javascript" src="./javascript/application.js"></script>
+        <script type="text/javascript" src="./javascript/prism.js"></script>
+        <script type="text/javascript" src="./javascript/prism-hooks.js" async defer></script>
+    </body>
+</html>

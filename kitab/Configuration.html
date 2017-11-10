@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <base href="./../" />
+        <title>Kitab\Configuration from Kitab</title>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <meta http-equiv="content-type" content="text/javascript; charset=utf-8" />
+        <meta http-equiv="content-type" content="text/css; charset=utf-8" />
+        <meta name="viewport" content="initial-scale=1.0" />
+
+        <link rel="stylesheet" href="./css/main.css" media="all" />
+        <link rel="stylesheet" href="./css/prism.css" media="all" />
+    </head>
+    <body>
+        <div id="search" role="search">
+            <div>
+                <input type="search" placeholder="Initializing search…" disabled />
+            </div>
+        </div>
+
+        <main>
+            <aside>
+    <header>
+        <a href="./">
+            <img src="https://placehold.it/150x150" alt="Home" />
+        </a>
+    </header>
+
+    <nav>
+        <h1><code><a href="./kitab/index.html">Kitab</a></code></h1>
+
+                    <h2>Classes</h2>
+
+            <ul class="list--flat">
+                                    <li><a href="./kitab/Configuration.html"><code>Configuration</code></a></li>
+                                    <li><a href="./kitab/Finder.html"><code>Finder</code></a></li>
+                            </ul>
+        
+        
+        
+            </nav>
+</aside>
+
+<article>
+    <h1>
+    Class <code>Kitab\Configuration</code>
+    <aside>
+        <a href="./kitab/Configuration.source.html#L.56-106" title="View source">[src]</a>
+    </aside>
+</h1>
+
+<pre><code class="language-php">class Configuration
+{
+    public function getOr(string $item, $default);
+}</code></pre>
+
+<section class="entity__description"><p>Configuration structure for the Kitab project.</p>
+<p>This structure contains all the configuration items used by Kitab.
+All these items are public. Use it as a regular structure.</p>
+<h1>Examples</h1>
+<pre><code class="language-php">$configuration              = new Kitab\Configuration();
+$configuration-&gt;projectName = 'Kitab';
+
+assert('Kitab' === $configuration-&gt;projectName);
+</code></pre>
+</section>
+
+
+    <h2 id="attributes">Attributes</h2>
+
+    <dl class="entity__children">
+                    <dt aria-label="defaultNamespace"><code class="language-php">public $defaultNamespace = null;</code></dt>
+            <dd>
+                <section><p>The default namespace of the project currently documented.</p>
+<p>A project can contain several namespaces, either because it hosts many,
+or because of the dependencies. The default namespace is the entry
+point of the documentation. If a default namespace is provided, when
+the user will open the documentation, she will be automatically
+redirected to the default namespace.</p>
+</section>
+            </dd>
+                    <dt aria-label="logoURL"><code class="language-php">public $logoURL = 'https://placehold.it/150x150';</code></dt>
+            <dd>
+                <section><p>URL to the logo of the documentation.</p>
+<p>Each page contains a logo, representing a link to the “home”. It is
+possible to customise the logo by using this configuration item. By
+default, a placeholder is used.</p>
+</section>
+            </dd>
+                    <dt aria-label="projectName"><code class="language-php">public $projectName = '(unknown)';</code></dt>
+            <dd>
+                <section><p>Project name.</p>
+<p>This configuration item represents the name of the project being documented.</p>
+</section>
+            </dd>
+            </dl>
+
+    <h2 id="methods">Methods</h2>
+
+    <dl class="entity__children">
+                    <dt aria-label="getOr">
+                <code class="language-php">public function getOr(string $item, $default)</code>
+                <aside><a href="./kitab/Configuration.source.html#L.98-105" title="View source of the `getOr` method">[src]</a></aside>
+            </dt>
+            <dd>
+                <section><p>Get a configuration item value, or —if <code>null</code>— return a default value.
+If the configuration item is not set, it will be considered as <code>null</code>.</p>
+<h1>Examples</h1>
+<pre><code class="language-php">$configuration = new Kitab\Configuration();
+
+assert($configuration-&gt;defaultNamespace === null);
+assert($configuration-&gt;getOr('defaultNamespace', 'foobar') === 'foobar');
+</code></pre>
+</section>
+            </dd>
+            </dl>
+
+</article>
+        </main>
+
+        <script type="text/javascript" src="./javascript/search.elm.js"></script>
+        <script type="text/javascript" src="./javascript/search-index.js"></script>
+        <script type="text/javascript" src="./javascript/search-metadata.js"></script>
+        <script type="text/javascript" src="./javascript/application.js"></script>
+        <script type="text/javascript" src="./javascript/prism.js"></script>
+        <script type="text/javascript" src="./javascript/prism-hooks.js" async defer></script>
+    </body>
+</html>

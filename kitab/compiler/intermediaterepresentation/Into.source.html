@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <base href="./../../../" />
+        <title>Source of Kitab\Compiler\IntermediateRepresentation\Into from Kitab</title>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <meta http-equiv="content-type" content="text/javascript; charset=utf-8" />
+        <meta http-equiv="content-type" content="text/css; charset=utf-8" />
+        <meta name="viewport" content="initial-scale=1.0" />
+
+        <link rel="stylesheet" href="./css/main.css" media="all" />
+        <link rel="stylesheet" href="./css/prism.css" media="all" />
+    </head>
+    <body>
+        <div id="search" role="search">
+            <div>
+                <input type="search" placeholder="Initializing search…" disabled />
+            </div>
+        </div>
+
+        <main>
+            <aside>
+    <header>
+        <a href="./">
+            <img src="https://placehold.it/150x150" alt="Home" />
+        </a>
+    </header>
+</aside>
+
+<article>
+    <pre id="L" data-line="," class="line-numbers"><code class="language-php no-wrap-hooks">&lt;?php
+
+declare(strict_types=1);
+
+/**
+ * Hoa
+ *
+ *
+ * @license
+ *
+ * New BSD License
+ *
+ * Copyright © 2007-2017, Hoa community. All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * Neither the name of the Hoa nor the names of its contributors may be
+ *       used to endorse or promote products derived from this software without
+ *       specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot;
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS AND CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ */
+
+namespace Kitab\Compiler\IntermediateRepresentation;
+
+use Kitab\Compiler\Parser;
+use PhpParser\Node;
+use PhpParser\NodeVisitorAbstract;
+use PhpParser\PrettyPrinter;
+
+/**
+ * A visitor to transform an Abstract Syntax Tree (AST) into an Intermediate
+ * Representation (IR).
+ *
+ * This visitor implements the API from `PhpParser\NodeVisitorAbstract`. It is
+ * applied when leaving a node of the AST to allow other visitors to transform
+ * the currently visited node and its children. For instance, the name
+ * resolver visitor modifies the AST when entering a node. This visitor needs
+ * the information from the name resolver visitor, so it must executes
+ * after. The best way to get all these information for a node and its
+ * children is to run each node when the visitor leaves a node.
+ *
+ * # Examples
+ *
+ * See [the examples of the current
+ * namespace](kitab/compiler/intermediaterepresentation/index.html).
+ */
+class Into extends NodeVisitorAbstract
+{
+    /**
+     * Name of the file where the AST comes from.
+     */
+    protected $_file        = null;
+
+    /**
+     * Pretty print visitor to transform the AST into its PHP representation.
+     *
+     * It is used for example to get the PHP representation of a default value
+     * for an attribute.
+     *
+     * This is a reference to the PHP pretty printer allocated in the
+     * `Kitab\Compiler\Parser` class.
+     */
+    private $_prettyPrinter = null;
+
+    /**
+     * Allocate a new visitor. The only mandatory information is the name of
+     * the file where the AST comes from.
+     */
+    public function __construct(string $filename)
+    {
+        $this-&gt;_file          = new File($filename);
+        $this-&gt;_prettyPrinter = Parser::getPhpPrettyPrinter();
+    }
+
+    /**
+     * Transform a node of the AST into an IR.
+     *
+     * This method returns nothing because it is called several times by the
+     * traverser API. To get the final result, see the `collect` method.
+     */
+    public function leaveNode(Node $node)
+    {
+        if ($node instanceof Node\Stmt\Class_) {
+            $classNode            = $node;
+            $class                = new Class_($classNode-&gt;namespacedName-&gt;toString());
+            $class-&gt;lineStart     = $classNode-&gt;getAttribute('startLine');
+            $class-&gt;lineEnd       = $classNode-&gt;getAttribute('endLine');
+            $class-&gt;documentation = new Documentation(Parser::extractFromComment($classNode-&gt;getDocComment()));
+            $class-&gt;constants     = $this-&gt;intoConstants($classNode);
+            $class-&gt;attributes    = $this-&gt;intoAttributes($classNode);
+            $class-&gt;methods       = $this-&gt;intoMethods($classNode);
+
+            if ($classNode-&gt;flags &amp; Node\Stmt\Class_::MODIFIER_ABSTRACT) {
+                $class-&gt;abstract = true;
+            }
+
+            if ($classNode-&gt;flags &amp; Node\Stmt\Class_::MODIFIER_FINAL) {
+                $class-&gt;final = true;
+            }
+
+            if (null !== $classNode-&gt;extends) {
+                $class-&gt;parent = $classNode-&gt;extends-&gt;toString();
+            }
+
+            foreach ($classNode-&gt;implements as $interfaceNameNode) {
+                $class-&gt;interfaces[] = $interfaceNameNode-&gt;toString();
+            }
+
+            $this-&gt;_file[] = $class;
+        } elseif ($node instanceof Node\Stmt\Interface_) {
+            $interfaceNode            = $node;
+            $interface                = new Interface_($interfaceNode-&gt;namespacedName-&gt;toString());
+            $interface-&gt;lineStart     = $interfaceNode-&gt;getAttribute('startLine');
+            $interface-&gt;lineEnd       = $interfaceNode-&gt;getAttribute('endLine');
+            $interface-&gt;documentation = new Documentation(Parser::extractFromComment($interfaceNode-&gt;getDocComment()));
+            $interface-&gt;constants     = $this-&gt;intoConstants($interfaceNode);
+            $interface-&gt;methods       = $this-&gt;intoMethods($interfaceNode);
+
+            if (!empty($interfaceNode-&gt;extends)) {
+                $interface-&gt;parents = array_map(
+                    function ($nodeName) {
+                        return $nodeName-&gt;toString();
+                    },
+                    $interfaceNode-&gt;extends
+                );
+            }
+
+            $this-&gt;_file[] = $interface;
+        } elseif ($node instanceof Node\Stmt\Trait_) {
+            $traitNode            = $node;
+            $trait                = new Trait_($traitNode-&gt;namespacedName-&gt;toString());
+            $trait-&gt;lineStart     = $traitNode-&gt;getAttribute('startLine');
+            $trait-&gt;lineEnd       = $traitNode-&gt;getAttribute('endLine');
+            $trait-&gt;documentation = new Documentation(Parser::extractFromComment($traitNode-&gt;getDocComment()));
+            $trait-&gt;methods       = $this-&gt;intoMethods($traitNode);
+
+            $this-&gt;_file[] = $trait;
+        } elseif ($node instanceof Node\Stmt\Function_) {
+            $functionNode            = $node;
+            $function                = new Function_($functionNode-&gt;namespacedName-&gt;toString());
+            $function-&gt;lineStart     = $functionNode-&gt;getAttribute('startLine');
+            $function-&gt;lineEnd       = $functionNode-&gt;getAttribute('endLine');
+            $function-&gt;documentation = new Documentation(Parser::extractFromComment($functionNode-&gt;getDocComment()));
+            $function-&gt;inputs        = $this-&gt;intoInputs($functionNode);
+            $function-&gt;output        = $this-&gt;intoOutput($functionNode);
+
+            $this-&gt;_file[] = $function;
+        }
+    }
+
+    /**
+     * Extract constant nodes and transform them into a collection of
+     * `Kitab\Compiler\IntermediateRepresentation\Constant` objects.
+     *
+     * It supports both declaration forms:
+     *
+     *  * `public const FOO = 42; public const BAR = 153;`, and
+     *  * `public const FOO = 42, BAR = 153;`.
+     *
+     * The resulting IR will be the same and will correspond to the former form.
+     */
+    protected function intoConstants(Node\Stmt\ClassLike $node): array
+    {
+        $constants = [];
+
+        foreach ($node-&gt;stmts as $statement) {
+            if (!($statement instanceof Node\Stmt\ClassConst)) {
+                continue;
+            }
+
+            $defaultDocumentation = Parser::extractFromComment($statement-&gt;getDocComment());
+
+            if (true === $statement-&gt;isPublic()) {
+                $visibility = Constant::VISIBILITY_PUBLIC;
+            } elseif (true === $statement-&gt;isProtected()) {
+                $visibility = Constant::VISIBILITY_PROTECTED;
+            } else {
+                $visibility = Constant::VISIBILITY_PRIVATE;
+            }
+
+            foreach ($statement-&gt;consts as $constantNode) {
+                $constant             = new Constant($constantNode-&gt;name);
+                $constant-&gt;visibility = $visibility;
+                $constant-&gt;value      = $this-&gt;_prettyPrinter-&gt;prettyPrint([$constantNode-&gt;value]);
+
+                $documentation = Parser::extractFromComment($constantNode-&gt;getDocComment());
+
+                if (empty($documentation)) {
+                    $constant-&gt;documentation = new Documentation($defaultDocumentation);
+                } else {
+                    $constant-&gt;documentation = new Documentation($documentation);
+                }
+
+                $constants[] = $constant;
+            }
+        }
+
+        return $constants;
+    }
+
+    /**
+     * Extract attribute nodes and transform them into a collection of
+     * `Kitab\Compiler\IntermediateRepresentation\Attribute` objects.
+     *
+     * It supports both declaration forms:
+     *
+     *  * `public $foo = 42; public $bar = 153;`, and
+     *  * `public $foo = 42, $bar = 153;`.
+     *
+     * The resulting IR will be the same and will correspond to the former form.
+     */
+    protected function intoAttributes(Node\Stmt\ClassLike $node): array
+    {
+        $attributes = [];
+
+        foreach ($node-&gt;stmts as $statement) {
+            if (!($statement instanceof Node\Stmt\Property)) {
+                continue;
+            }
+
+            $defaultDocumentation = Parser::extractFromComment($statement-&gt;getDocComment());
+
+            if (true === $statement-&gt;isPublic()) {
+                $visibility = Attribute::VISIBILITY_PUBLIC;
+            } elseif (true === $statement-&gt;isProtected()) {
+                $visibility = Attribute::VISIBILITY_PROTECTED;
+            } else {
+                $visibility = Attribute::VISIBILITY_PRIVATE;
+            }
+
+            $static = $statement-&gt;isStatic();
+
+            foreach ($statement-&gt;props as $attributeNode) {
+                $attribute             = new Attribute($attributeNode-&gt;name);
+                $attribute-&gt;visibility = $visibility;
+                $attribute-&gt;static     = $static;
+
+                if (null !== $attributeNode-&gt;default) {
+                    $attribute-&gt;default = $this-&gt;_prettyPrinter-&gt;prettyPrint([$attributeNode-&gt;default]);
+                }
+
+                $documentation = Parser::extractFromComment($attributeNode-&gt;getDocComment());
+
+                if (empty($documentation)) {
+                    $attribute-&gt;documentation = new Documentation($defaultDocumentation);
+                } else {
+                    $attribute-&gt;documentation = new Documentation($documentation);
+                }
+
+                $attributes[] = $attribute;
+            }
+        }
+
+        return $attributes;
+    }
+
+    /**
+     * Extract method nodes and transform them into a collection of
+     * `Kitab\Compiler\IntermediateRepresentation\Method` objects.
+     */
+    protected function intoMethods(Node\Stmt\ClassLike $node): array
+    {
+        $methods = [];
+
+        foreach ($node-&gt;getMethods() as $methodNode) {
+            $method            = new Method($methodNode-&gt;name);
+            $method-&gt;lineStart = $methodNode-&gt;getAttribute('startLine');
+            $method-&gt;lineEnd   = $methodNode-&gt;getAttribute('endLine');
+
+            // Documentation.
+            $method-&gt;documentation = new Documentation(Parser::extractFromComment($methodNode-&gt;getDocComment()));
+
+            // Visibility, scope, and abstract.
+            if (true === $methodNode-&gt;isPublic()) {
+                $method-&gt;visibility = $method::VISIBILITY_PUBLIC;
+            } elseif (true === $methodNode-&gt;isProtected()) {
+                $method-&gt;visibility = $method::VISIBILITY_PROTECTED;
+            } else {
+                $method-&gt;visibility = $method::VISIBILITY_PRIVATE;
+            }
+
+            $method-&gt;static   = $methodNode-&gt;isStatic();
+            $method-&gt;abstract = $methodNode-&gt;isAbstract();
+            $method-&gt;final    = $methodNode-&gt;isFinal();
+
+            $method-&gt;inputs = $this-&gt;intoInputs($methodNode);
+            $method-&gt;output = $this-&gt;intoOutput($methodNode);
+
+            $methods[] = $method;
+        }
+
+        return $methods;
+    }
+
+    /**
+     * Extract nodes representing parameters of a function and transform them
+     * into a collection of
+     * `Kitab\Compiler\IntermediateRepresentation\Parameter` objects.
+     */
+    protected function intoInputs($node): array
+    {
+        $inputs         = [];
+        $parametersNode = $node-&gt;params;
+
+        foreach ($parametersNode as $parameterNode) {
+            $parameter                  = new Parameter($parameterNode-&gt;name);
+            $parameter-&gt;type            = $this-&gt;intoType($parameterNode-&gt;type);
+            $parameter-&gt;type-&gt;reference = $parameterNode-&gt;byRef;
+            $parameter-&gt;variadic        = $parameterNode-&gt;variadic;
+
+            $inputs[] = $parameter;
+        }
+
+        return $inputs;
+    }
+
+    /**
+     * Extract node representing the output of a function and transform it
+     * into a `Kitab\Compiler\IntermediateRepresentation\Type` object.
+     */
+    protected function intoOutput($node): Type
+    {
+        $output            = $this-&gt;intoType($node-&gt;returnType);
+        $output-&gt;reference = $node-&gt;byRef;
+
+        return $output;
+    }
+
+    /**
+     * Extract node representing a type and transform it into a
+     * `Kitab\Compiler\IntermediateRepresentation\Type` object.
+     */
+    protected function intoType($node): Type
+    {
+        $type = new Type();
+
+        if ($node instanceof Node\Name) {
+            $type-&gt;name = $node-&gt;toString();
+        } elseif ($node instanceof Node\NullableType) {
+            $type-&gt;nullable = true;
+
+            $nullableNode = $node-&gt;type;
+
+            if ($nullableNode instanceof Node\Name) {
+                $type-&gt;name = $nullableNode-&gt;toString();
+            } else {
+                $type-&gt;name = $nullableNode;
+            }
+        } else {
+            $type-&gt;name = $node;
+        }
+
+        return $type;
+    }
+
+    /**
+     * Because the visitor runs for every node in the AST, the only way to
+     * collect the resulting IR is to call this method.
+     *
+     * This method can be called at any time but it is best to call it when
+     * the traverser returns. It means the transformation will be complete.
+     */
+    public function collect(): File
+    {
+        return $this-&gt;_file;
+    }
+}
+</code></pre>
+</article>
+        </main>
+
+        <script type="text/javascript" src="./javascript/search.elm.js"></script>
+        <script type="text/javascript" src="./javascript/search-index.js"></script>
+        <script type="text/javascript" src="./javascript/search-metadata.js"></script>
+        <script type="text/javascript" src="./javascript/application.js"></script>
+        <script type="text/javascript" src="./javascript/prism.js"></script>
+        <script type="text/javascript" src="./javascript/prism-hooks.js" async defer></script>
+    </body>
+</html>

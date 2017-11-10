@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <base href="./../../" />
+        <title>Kitab\Compiler\Parser from Kitab</title>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <meta http-equiv="content-type" content="text/javascript; charset=utf-8" />
+        <meta http-equiv="content-type" content="text/css; charset=utf-8" />
+        <meta name="viewport" content="initial-scale=1.0" />
+
+        <link rel="stylesheet" href="./css/main.css" media="all" />
+        <link rel="stylesheet" href="./css/prism.css" media="all" />
+    </head>
+    <body>
+        <div id="search" role="search">
+            <div>
+                <input type="search" placeholder="Initializing search…" disabled />
+            </div>
+        </div>
+
+        <main>
+            <aside>
+    <header>
+        <a href="./">
+            <img src="https://placehold.it/150x150" alt="Home" />
+        </a>
+    </header>
+
+    <nav>
+        <h1><code><a href="./kitab/index.html">Kitab</a>\<wbr /><a href="./kitab/compiler/index.html">Compiler</a></code></h1>
+
+                    <h2>Classes</h2>
+
+            <ul class="list--flat">
+                                    <li><a href="./kitab/compiler/Compiler.html"><code>Compiler</code></a></li>
+                                    <li><a href="./kitab/compiler/Parser.html"><code>Parser</code></a></li>
+                            </ul>
+        
+        
+        
+            </nav>
+</aside>
+
+<article>
+    <h1>
+    Class <code>Kitab\Compiler\Parser</code>
+    <aside>
+        <a href="./kitab/compiler/Parser.source.html#L.64-216" title="View source">[src]</a>
+    </aside>
+</h1>
+
+<pre><code class="language-php">class Parser
+{
+    public function parse(Hoa\File\SplFileInfo $file): Kitab\Compiler\IntermediateRepresentation\File;
+    protected function intoIntermediateRepresentation(array $statements, string $fileName): Kitab\Compiler\IntermediateRepresentation\File;
+    public static function getPhpParser(): PhpParser\Parser\Multiple;
+    protected static function getTraverser(): PhpParser\NodeTraverser;
+    public static function getPhpPrettyPrinter(): PhpParser\PrettyPrinter\Standard;
+    public static function extractFromComment($comment);
+}</code></pre>
+
+<section class="entity__description"><p>A parser producing an Intermediate Representation.</p>
+<p>This parser takes one file, parses it, generates an Abstract Syntax Tree,
+and transforms it into an Intermediate Representation.</p>
+<p>The PHP 7 form is prefered over PHP 5 and lower forms, it means it will try
+to parse with PHP 7 strategy first. They are small but subtle <a href="http://php.net/manual/en/migration70.incompatible.php#migration70.incompatible.variable-handling">differences
+with previous PHP
+versions</a>.</p>
+<p>All the work done by the parser is delegated to
+<a href="https://github.com/nikic/PHP-Parser">PHP-Parser</a>.</p>
+</section>
+
+
+    <h2 id="attributes">Attributes</h2>
+
+    <dl class="entity__children">
+                    <dt aria-label="_phpParser"><code class="language-php">protected static $_phpParser = null;</code></dt>
+            <dd>
+                <section><p>The PHP parser, aka <a href="https://github.com/nikic/PHP-Parser">PHP-Parser</a>,
+that is used to parse PHP files.</p>
+<p>The PHP parser is allocated once, hence the static declaration.</p>
+</section>
+            </dd>
+                    <dt aria-label="_phpTraverser"><code class="language-php">protected static $_phpTraverser = null;</code></dt>
+            <dd>
+                <section><p>A traverser, for PHP-Parser, is a set of visitors visiting the Abstract
+Syntax Tree produced by the parser. This traverser will be used to
+apply visitors on the AST. It always contain a name resolver visitor,
+to get fully qualified names everywhere in the code.</p>
+<p>The traverser is allocated once, hence the static declaration.</p>
+</section>
+            </dd>
+                    <dt aria-label="_phpPrettyPrinter"><code class="language-php">protected static $_phpPrettyPrinter = null;</code></dt>
+            <dd>
+                <section><p>Pretty print visitor to transform a PHP AST into its PHP representation.</p>
+<p>The pretty printer is allocated once, hence the static declaration.</p>
+</section>
+            </dd>
+            </dl>
+
+    <h2 id="methods">Methods</h2>
+
+    <dl class="entity__children">
+                    <dt aria-label="parse">
+                <code class="language-php">public function parse(Hoa\File\SplFileInfo $file): Kitab\Compiler\IntermediateRepresentation\File</code>
+                <aside><a href="./kitab/compiler/Parser.source.html#L.112-130" title="View source of the `parse` method">[src]</a></aside>
+            </dt>
+            <dd>
+                <section><p>The <code>parse</code> methods parses a file aiming at containing PHP code, and
+produces the Intermediate Representation of it if valid. <a href="kitab/compiler/index.html">Get more
+information about the general workflow</a>.</p>
+<h1>Examples</h1>
+<pre><code class="language-php,ignore">$file   = new Hoa\File\SplFileInfo('path/to/a/file.php');
+$parser = new Kitab\Compiler\Parser();
+
+$intermediateRepresentation = $parser-&gt;parse($file);
+</code></pre>
+<h1>Exceptions</h1>
+<p>The <a href="./kitab/exception/PhpParserError.html"><code>Kitab\Exception\PhpParserError</code></a> can be thrown if the given file
+does not contain valid PHP code. The exception contains the <code>Error</code>
+exception from PHP-Parser, which holds more information, as a previous
+exception.</p>
+</section>
+            </dd>
+                    <dt aria-label="intoIntermediateRepresentation">
+                <code class="language-php">protected function intoIntermediateRepresentation(array $statements, string $fileName): Kitab\Compiler\IntermediateRepresentation\File</code>
+                <aside><a href="./kitab/compiler/Parser.source.html#L.143-155" title="View source of the `intoIntermediateRepresentation` method">[src]</a></aside>
+            </dt>
+            <dd>
+                <section><p>Transform the Abstract Syntax Tree into its Intermediate Representation.</p>
+<p>In PHP-Parser, the AST is a hashmap of n-dimensions of statements. The
+produced IR is a tree of structures. The file name of the original file
+is kept to provide more context.</p>
+<p>The transformation is applied by a visitor. It is added on the
+traverser (see <code>self::$_phpTraverser</code>), run, and remove. The visitor
+contains the resulting IR.</p>
+</section>
+            </dd>
+                    <dt aria-label="getPhpParser">
+                <code class="language-php">public static function getPhpParser(): PhpParser\Parser\Multiple</code>
+                <aside><a href="./kitab/compiler/Parser.source.html#L.160-167" title="View source of the `getPhpParser` method">[src]</a></aside>
+            </dt>
+            <dd>
+                <section><p>Get the statically allocated PHP-Parser instance.</p>
+</section>
+            </dd>
+                    <dt aria-label="getTraverser">
+                <code class="language-php">protected static function getTraverser(): PhpParser\NodeTraverser</code>
+                <aside><a href="./kitab/compiler/Parser.source.html#L.172-180" title="View source of the `getTraverser` method">[src]</a></aside>
+            </dt>
+            <dd>
+                <section><p>Get the statically allocated traverser instance.</p>
+</section>
+            </dd>
+                    <dt aria-label="getPhpPrettyPrinter">
+                <code class="language-php">public static function getPhpPrettyPrinter(): PhpParser\PrettyPrinter\Standard</code>
+                <aside><a href="./kitab/compiler/Parser.source.html#L.185-192" title="View source of the `getPhpPrettyPrinter` method">[src]</a></aside>
+            </dt>
+            <dd>
+                <section><p>Get the statically allocated pretty printer</p>
+</section>
+            </dd>
+                    <dt aria-label="extractFromComment">
+                <code class="language-php">public static function extractFromComment($comment)</code>
+                <aside><a href="./kitab/compiler/Parser.source.html#L.208-215" title="View source of the `extractFromComment` method">[src]</a></aside>
+            </dt>
+            <dd>
+                <section><p>Extract content from a comment of kind block (<code>/**</code>).</p>
+<p>This is a small utility used to extract documentation from the code.</p>
+<h1>Examples</h1>
+<pre><code class="language-php">$content = 'foobar';
+$input   = '/**' . $content . '*' . '/';
+
+assert(Kitab\Compiler\Parser::extractFromComment($input) === $content);
+</code></pre>
+</section>
+            </dd>
+            </dl>
+
+</article>
+        </main>
+
+        <script type="text/javascript" src="./javascript/search.elm.js"></script>
+        <script type="text/javascript" src="./javascript/search-index.js"></script>
+        <script type="text/javascript" src="./javascript/search-metadata.js"></script>
+        <script type="text/javascript" src="./javascript/application.js"></script>
+        <script type="text/javascript" src="./javascript/prism.js"></script>
+        <script type="text/javascript" src="./javascript/prism-hooks.js" async defer></script>
+    </body>
+</html>

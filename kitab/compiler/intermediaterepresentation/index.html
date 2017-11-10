@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <base href="./../../../" />
+        <title>Index of Kitab\Compiler\IntermediateRepresentation from Kitab</title>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <meta http-equiv="content-type" content="text/javascript; charset=utf-8" />
+        <meta http-equiv="content-type" content="text/css; charset=utf-8" />
+        <meta name="viewport" content="initial-scale=1.0" />
+
+        <link rel="stylesheet" href="./css/main.css" media="all" />
+        <link rel="stylesheet" href="./css/prism.css" media="all" />
+    </head>
+    <body>
+        <div id="search" role="search">
+            <div>
+                <input type="search" placeholder="Initializing search…" disabled />
+            </div>
+        </div>
+
+        <main>
+            <aside>
+    <header>
+        <a href="./">
+            <img src="https://placehold.it/150x150" alt="Home" />
+        </a>
+    </header>
+
+    <nav>
+                    <h1><code><a href="./kitab/index.html">Kitab</a>\<wbr /><a href="./kitab/compiler/index.html">Compiler</a></code></h1>
+        
+        <h2>Namespaces</h2>
+
+        <ul class="list--flat">
+                            <li><a href="./kitab\compiler\intermediaterepresentation/index.html"><code>IntermediateRepresentation</code></a></li>
+                            <li><a href="./kitab\compiler\target/index.html"><code>Target</code></a></li>
+                    </ul>
+    </nav>
+</aside>
+
+<article>
+    <h1>Namespace <code>Kitab\Compiler\IntermediateRepresentation</code></h1>
+
+            <section class="entity__description"><p>This namespace contains all the Intermediate Representations the
+parser will compile into. They represent an abstraction of the code
+holding only the data required by the target.</p>
+<p>See <a href="kitab/compiler/index.html">the global workflow</a> to get understand
+where the Intermediate Representation (IR) happens.</p>
+<h1>Into IR with a visitor</h1>
+<p>The parser analyses a file, and a resulting Abstract Syntax Tree (AST)
+is generated on success. The AST is then transformed into the IR by
+applying a visitor on it. The
+<a href="./kitab/compiler/intermediaterepresentation/Into.html"><code>Kitab\Compiler\IntermediateRepresentation\Into</code></a> class acts as a
+visitor on the AST to transform some nodes in the AST into IR. When
+the transformation finishes, the IR can be retrived by collecting it.</p>
+<h2>Examples</h2>
+<p>Let <code>$phpParser</code> be an instance of
+the <a href="https://github.com/nikic/PHP-Parser"><code>PHP-Parser</code></a> parser, thus:</p>
+<pre><code class="language-php,ignore">// Parse PHP code.
+$statements = $phpParser-&gt;parse('&lt;?php function f(int $x): int { return $x &lt;&lt; 2; }');
+
+// Prepare the visitor to transform the AST into IR.
+$intoIR = new Kitab\Compiler\IntermediateRepresentation\Into('example.php');
+
+// Prepare the visitor logic.
+$traverser = new PhpParser\NodeTraverser();
+$traverser-&gt;addVisitor($intoIR);
+
+// Visitor and transform.
+$traverser-&gt;traverse($statements);
+
+// Collect the result.
+$intermediateRepresentation = $intoIR-&gt;collect();
+
+assert($intermediateRepresentation instanceof Kitab\Compiler\IntermediateRepresentation\File);
+</code></pre>
+</section>
+    
+            <h2 id="classes">Classes</h2>
+
+        <ul class="list--table">
+                            <li>
+                    <a href="./kitab/compiler/intermediaterepresentation/Attribute.html"><code>Attribute</code></a>
+                    <p>An attribute intermediate representation.</p>
+                </li>
+                            <li>
+                    <a href="./kitab/compiler/intermediaterepresentation/Class_.html"><code>Class_</code></a>
+                    <p>A class intermediate representation.</p>
+                </li>
+                            <li>
+                    <a href="./kitab/compiler/intermediaterepresentation/Constant.html"><code>Constant</code></a>
+                    <p>A constant intermediate representation.</p>
+                </li>
+                            <li>
+                    <a href="./kitab/compiler/intermediaterepresentation/Documentation.html"><code>Documentation</code></a>
+                    <p>A documentation intermediate representation.</p>
+                </li>
+                            <li>
+                    <a href="./kitab/compiler/intermediaterepresentation/Entity.html"><code>Entity</code></a>
+                    <p>An entity intermediate representation.</p>
+                </li>
+                            <li>
+                    <a href="./kitab/compiler/intermediaterepresentation/File.html"><code>File</code></a>
+                    <p>A file intermediate representation.</p>
+                </li>
+                            <li>
+                    <a href="./kitab/compiler/intermediaterepresentation/Function_.html"><code>Function_</code></a>
+                    <p>A named function intermediate representation.</p>
+                </li>
+                            <li>
+                    <a href="./kitab/compiler/intermediaterepresentation/Interface_.html"><code>Interface_</code></a>
+                    <p>An interface intermediate representation.</p>
+                </li>
+                            <li>
+                    <a href="./kitab/compiler/intermediaterepresentation/Into.html"><code>Into</code></a>
+                    <p>A visitor to transform an Abstract Syntax Tree (AST) into an Intermediate
+Representation (IR).</p>
+                </li>
+                            <li>
+                    <a href="./kitab/compiler/intermediaterepresentation/Method.html"><code>Method</code></a>
+                    <p>A method intermediate representation.</p>
+                </li>
+                            <li>
+                    <a href="./kitab/compiler/intermediaterepresentation/Parameter.html"><code>Parameter</code></a>
+                    <p>A parameter intermediate representation.</p>
+                </li>
+                            <li>
+                    <a href="./kitab/compiler/intermediaterepresentation/Trait_.html"><code>Trait_</code></a>
+                    <p>A trait intermediate representation.</p>
+                </li>
+                            <li>
+                    <a href="./kitab/compiler/intermediaterepresentation/Type.html"><code>Type</code></a>
+                    <p>A type intermediate representation.</p>
+                </li>
+                    </ul>
+    
+            <h2 id="interfaces">Interfaces</h2>
+
+        <ul class="list--table">
+                            <li>
+                    <a href="./kitab/compiler/intermediaterepresentation/HasMethods.html"><code>HasMethods</code></a>
+                    <p>An interface to represent an entity with methods.</p>
+                </li>
+                    </ul>
+    
+    
+    
+    </article>
+        </main>
+
+        <script type="text/javascript" src="./javascript/search.elm.js"></script>
+        <script type="text/javascript" src="./javascript/search-index.js"></script>
+        <script type="text/javascript" src="./javascript/search-metadata.js"></script>
+        <script type="text/javascript" src="./javascript/application.js"></script>
+        <script type="text/javascript" src="./javascript/prism.js"></script>
+        <script type="text/javascript" src="./javascript/prism-hooks.js" async defer></script>
+    </body>
+</html>

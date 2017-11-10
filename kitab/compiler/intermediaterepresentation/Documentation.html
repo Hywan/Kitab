@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <base href="./../../../" />
+        <title>Kitab\Compiler\IntermediateRepresentation\Documentation from Kitab</title>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <meta http-equiv="content-type" content="text/javascript; charset=utf-8" />
+        <meta http-equiv="content-type" content="text/css; charset=utf-8" />
+        <meta name="viewport" content="initial-scale=1.0" />
+
+        <link rel="stylesheet" href="./css/main.css" media="all" />
+        <link rel="stylesheet" href="./css/prism.css" media="all" />
+    </head>
+    <body>
+        <div id="search" role="search">
+            <div>
+                <input type="search" placeholder="Initializing search…" disabled />
+            </div>
+        </div>
+
+        <main>
+            <aside>
+    <header>
+        <a href="./">
+            <img src="https://placehold.it/150x150" alt="Home" />
+        </a>
+    </header>
+
+    <nav>
+        <h1><code><a href="./kitab/index.html">Kitab</a>\<wbr /><a href="./kitab/compiler/index.html">Compiler</a>\<wbr /><a href="./kitab/compiler/intermediaterepresentation/index.html">IntermediateRepresentation</a></code></h1>
+
+                    <h2>Classes</h2>
+
+            <ul class="list--flat">
+                                    <li><a href="./kitab/compiler/intermediaterepresentation/Attribute.html"><code>Attribute</code></a></li>
+                                    <li><a href="./kitab/compiler/intermediaterepresentation/Class_.html"><code>Class_</code></a></li>
+                                    <li><a href="./kitab/compiler/intermediaterepresentation/Constant.html"><code>Constant</code></a></li>
+                                    <li><a href="./kitab/compiler/intermediaterepresentation/Documentation.html"><code>Documentation</code></a></li>
+                                    <li><a href="./kitab/compiler/intermediaterepresentation/Entity.html"><code>Entity</code></a></li>
+                                    <li><a href="./kitab/compiler/intermediaterepresentation/File.html"><code>File</code></a></li>
+                                    <li><a href="./kitab/compiler/intermediaterepresentation/Function_.html"><code>Function_</code></a></li>
+                                    <li><a href="./kitab/compiler/intermediaterepresentation/Interface_.html"><code>Interface_</code></a></li>
+                                    <li><a href="./kitab/compiler/intermediaterepresentation/Into.html"><code>Into</code></a></li>
+                                    <li><a href="./kitab/compiler/intermediaterepresentation/Method.html"><code>Method</code></a></li>
+                                    <li><a href="./kitab/compiler/intermediaterepresentation/Parameter.html"><code>Parameter</code></a></li>
+                                    <li><a href="./kitab/compiler/intermediaterepresentation/Trait_.html"><code>Trait_</code></a></li>
+                                    <li><a href="./kitab/compiler/intermediaterepresentation/Type.html"><code>Type</code></a></li>
+                            </ul>
+        
+                    <h2>Interfaces</h2>
+
+            <ul class="list--flat">
+                                    <li><a href="./kitab/compiler/intermediaterepresentation/HasMethods.html"><code>HasMethods</code></a></li>
+                            </ul>
+        
+        
+            </nav>
+</aside>
+
+<article>
+    <h1>
+    Class <code>Kitab\Compiler\IntermediateRepresentation\Documentation</code>
+    <aside>
+        <a href="./kitab/compiler/intermediaterepresentation/Documentation.source.html#L.56-96" title="View source">[src]</a>
+    </aside>
+</h1>
+
+<pre><code class="language-php">class Documentation
+{
+    public function __construct(string $documentation);
+    public function getDescription(): string;
+    public function __toString(): string;
+}</code></pre>
+
+<section class="entity__description"><p>A documentation intermediate representation.</p>
+<p>A documentation is block comment starting with <code>/**</code> and “attached” to a
+statement (like a function, a method, a class, an attribute
+etc.). “Attached” means that it immediately preceeds a statement, modulo
+whitespaces.</p>
+<p>Kitab expects those documentation to contain
+<a href="http://commonmark.org/">CommonMark</a> formatted text.</p>
+<p>The first paragraph of the documentation is called the
+description. Paragraphes must be separated by 2 consecutive newlines.</p>
+</section>
+
+
+    <h2 id="attributes">Attributes</h2>
+
+    <dl class="entity__children">
+                    <dt aria-label="documentation"><code class="language-php">public $documentation = '';</code></dt>
+            <dd>
+                <section><p>The raw extracted documentation, with not formatting applied.</p>
+</section>
+            </dd>
+            </dl>
+
+    <h2 id="methods">Methods</h2>
+
+    <dl class="entity__children">
+                    <dt aria-label="__construct">
+                <code class="language-php">public function __construct(string $documentation)</code>
+                <aside><a href="./kitab/compiler/intermediaterepresentation/Documentation.source.html#L.66-69" title="View source of the `__construct` method">[src]</a></aside>
+            </dt>
+            <dd>
+                <section><p>Allocate a documentation.</p>
+</section>
+            </dd>
+                    <dt aria-label="getDescription">
+                <code class="language-php">public function getDescription(): string</code>
+                <aside><a href="./kitab/compiler/intermediaterepresentation/Documentation.source.html#L.78-85" title="View source of the `getDescription` method">[src]</a></aside>
+            </dt>
+            <dd>
+                <section><p>The description is the first paragraph of the documentation.</p>
+<p>It generally gives an overview or the abstract idea of the documented
+feature. This is more or less like a summary that highlights important
+points.</p>
+</section>
+            </dd>
+                    <dt aria-label="__toString">
+                <code class="language-php">public function __toString(): string</code>
+                <aside><a href="./kitab/compiler/intermediaterepresentation/Documentation.source.html#L.92-95" title="View source of the `__toString` method">[src]</a></aside>
+            </dt>
+            <dd>
+                <section><p>Transform the intermediate representation.</p>
+<p>It basically returns the documentation. No extra allocation is applied.</p>
+</section>
+            </dd>
+            </dl>
+
+</article>
+        </main>
+
+        <script type="text/javascript" src="./javascript/search.elm.js"></script>
+        <script type="text/javascript" src="./javascript/search-index.js"></script>
+        <script type="text/javascript" src="./javascript/search-metadata.js"></script>
+        <script type="text/javascript" src="./javascript/application.js"></script>
+        <script type="text/javascript" src="./javascript/prism.js"></script>
+        <script type="text/javascript" src="./javascript/prism-hooks.js" async defer></script>
+    </body>
+</html>
