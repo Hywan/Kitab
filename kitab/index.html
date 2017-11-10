@@ -1,13 +1,22 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" prefix="og: http://ogp.me/ns#">
     <head>
         <base href="./../" />
         <title>Index of Kitab from Kitab</title>
         <meta http-equiv="content-type" content="text/html; charset=utf-8" />
         <meta http-equiv="content-type" content="text/javascript; charset=utf-8" />
         <meta http-equiv="content-type" content="text/css; charset=utf-8" />
-        <meta name="viewport" content="initial-scale=1.0" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <meta name="generator" content="Kitab (https://hoa-project.net/)" />
+
+        <meta property="og:title" content="Index of Kitab from Kitab" />
+        <meta property="og:type" content="website" />
+        <meta proprery="og:image" content="https://placehold.it/150x150" />
+
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:creator" content="@hoaproject" />
 
         <link rel="stylesheet" href="./css/main.css" media="all" />
         <link rel="stylesheet" href="./css/prism.css" media="all" />
@@ -41,8 +50,23 @@
 <article>
     <h1>Namespace <code>Kitab</code></h1>
 
-            <section class="entity__description"><p>Kitab is the ideal companion for <strong>Documentation-Driven Quality</strong> for
-PHP programs.</p>
+            <section class="entity__description"><p align="center">
+    <img src="https://raw.githubusercontent.com/hoaproject/Kitab/master/resource/logo.svg?sanitize=true" width="250px" />
+</p>
+<hr />
+<p align="center">
+  <a href="https://travis-ci.org/hoaproject/Kitab"><img src="https://img.shields.io/travis/hoaproject/Kitab/master.svg" alt="Build status" /></a>
+  <a href="https://packagist.org/packages/hoa/kitab"><img src="https://img.shields.io/packagist/dt/hoa/kitab.svg" alt="Packagist" /></a>
+  <a href="https://hoa-project.net/LICENSE"><img src="https://img.shields.io/packagist/l/hoa/kitab.svg" alt="License" /></a>
+</p>
+<p align="center">
+  <strong>Kitab</strong> is the ideal companion for
+  <strong>Documentation-Driven Quality</strong> for PHP programs.
+</p>
+<p align="center">
+  Made with ❤️ by <a href="https://hoa-project.net"><img src="https://static.hoa-project.net/Image/Hoa.svg" height="18" alt="Hoa" /></a>
+</p>
+<h1>Kitab</h1>
 <p>The goal of Kitab is twofold, <strong>render</strong> and <strong>test</strong> the
 documentation:</p>
 <ol>
@@ -58,7 +82,7 @@ are run directly to ensure the examples are still up-to-date and
 working.</p>
 </li>
 </ol>
-<h1>Static documentation</h1>
+<h2>Static documentation</h2>
 <p>Kitab is able to compile the documentation inside your code into
 static HTML files. A carefully crafted design is provided to ensure a
 great look for your documentation. This is possible to customize the
@@ -80,7 +104,7 @@ mapping definitions. This is useful to map <code>README.md</code> files to
 namespace directories, more below. The <code>--open</code> option opens the
 documentation in your default browser as soon as it is generated
 successfully.</p>
-<h1>DocTest</h1>
+<h2>DocTest</h2>
 <p>Documentation test suites, aka DocTest, are generated based on the
 examples present in your documentation. Examples are compiled into
 test suites and executed on-the-fly. A cache is generated to avoid

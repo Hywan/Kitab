@@ -1,13 +1,22 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" prefix="og: http://ogp.me/ns#">
     <head>
         <base href="./../../../../" />
         <title>Source of Kitab\Compiler\Target\Html\Html from Kitab</title>
         <meta http-equiv="content-type" content="text/html; charset=utf-8" />
         <meta http-equiv="content-type" content="text/javascript; charset=utf-8" />
         <meta http-equiv="content-type" content="text/css; charset=utf-8" />
-        <meta name="viewport" content="initial-scale=1.0" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <meta name="generator" content="Kitab (https://hoa-project.net/)" />
+
+        <meta property="og:title" content="Source of Kitab\Compiler\Target\Html\Html from Kitab" />
+        <meta property="og:type" content="website" />
+        <meta proprery="og:image" content="https://placehold.it/150x150" />
+
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:creator" content="@hoaproject" />
 
         <link rel="stylesheet" href="./css/main.css" media="all" />
         <link rel="stylesheet" href="./css/prism.css" media="all" />
@@ -207,6 +216,8 @@ class Html implements Target
 
         $dataSource = new StdClass();
 
+        $dataSource-&gt;configuration = $this-&gt;_configuration;
+
         $dataSource-&gt;layout        = new StdClass();
         $dataSource-&gt;layout-&gt;base  = './' . str_repeat('../', substr_count($namespaceName, '/') + 1);
         $dataSource-&gt;layout-&gt;title = sprintf(
@@ -286,6 +297,9 @@ class Html implements Target
                     );
 
                 $data = new StdClass();
+
+                $data-&gt;configuration = $this-&gt;_configuration;
+
                 $data-&gt;namespace       = new StdClass();
                 $data-&gt;namespace-&gt;name = rtrim($nextAccumulator, '\\');
 
@@ -543,6 +557,8 @@ class Html implements Target
                 }
 
                 $data = new StdClass();
+
+                $data-&gt;configuration = $this-&gt;_configuration;
 
                 $data-&gt;layout        = new StdClass();
                 $data-&gt;layout-&gt;base  = './' . str_repeat('../', substr_count($accumulator, '\\'));
