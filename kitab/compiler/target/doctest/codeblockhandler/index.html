@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+
+<html lang="en" prefix="og: http://ogp.me/ns#">
+    <head>
+        <base href="./../../../../../" />
+        <title>Index of Kitab\Compiler\Target\DocTest\CodeBlockHandler from Kitab</title>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <meta http-equiv="content-type" content="text/javascript; charset=utf-8" />
+        <meta http-equiv="content-type" content="text/css; charset=utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <link rel="preload" href="./css/main.css" as="style" />
+        <link rel="preload" href="./javascript/prism.js" as="script" />
+        <link rel="preload" href="./javascript/prism-hooks.js" as="script" />
+        <link rel="preload" href="./javascript/search.elm.js" as="script" />
+        <link rel="preload" href="./javascript/search-index.js" as="script" />
+        <link rel="preload" href="./javascript/search-metadata.js" as="script" />
+        <link rel="preload" href="./javascript/application.js" as="script" />
+
+        <link rel="stylesheet" href="./css/main.css" media="all" />
+        <link rel="stylesheet" href="./css/prism.css" media="all" />
+
+        <link rel="icon" type="image/png" href="./resource/logo_32x32.png" sizes="32x32" />
+        <link rel="icon" type="image/png" href="./resource/logo_192x192.png" sizes="192x192" />
+
+        <meta name="generator" content="Kitab (https://hoa-project.net/)" />
+        <meta name="description" content="Index of Kitab\Compiler\Target\DocTest\CodeBlockHandler from Kitab">
+
+        <meta property="og:title" content="Index of Kitab\Compiler\Target\DocTest\CodeBlockHandler from Kitab" />
+        <meta property="og:type" content="website" />
+        <meta proprery="og:image" content="https://raw.githubusercontent.com/hoaproject/Kitab/master/resource/logo.svg?sanitize=true" />
+
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:creator" content="@hoaproject" />
+        <meta name="twitter:text:title" content="Index of Kitab\Compiler\Target\DocTest\CodeBlockHandler from Kitab" />
+        <meta name="twitter:image:src" content="https://raw.githubusercontent.com/hoaproject/Kitab/master/resource/logo.svg?sanitize=true" />
+        <meta name="twitter:image:alt" content="Kitab" />
+    </head>
+    <body>
+        <div id="search" role="search">
+            <div>
+                <input type="search" placeholder="Initializing search…" disabled />
+            </div>
+        </div>
+
+        <main>
+            <aside>
+    <header>
+        <a href="./">
+            <img src="https://raw.githubusercontent.com/hoaproject/Kitab/master/resource/logo.svg?sanitize=true" alt="Home" />
+        </a>
+    </header>
+
+    <nav>
+                    <h1><code><a href="./kitab/index.html">Kitab</a>\<wbr /><a href="./kitab/compiler/index.html">Compiler</a>\<wbr /><a href="./kitab/compiler/target/index.html">Target</a>\<wbr /><a href="./kitab/compiler/target/doctest/index.html">DocTest</a></code></h1>
+        
+        <h2>Namespaces</h2>
+
+        <ul class="list--flat">
+                            <li><a href="./kitab\compiler\target\doctest\codeblockhandler/index.html"><code>CodeBlockHandler</code></a></li>
+                    </ul>
+    </nav>
+</aside>
+
+<article>
+    <h1>Namespace <code>Kitab\Compiler\Target\DocTest\CodeBlockHandler</code></h1>
+
+            <section class="entity__description"><p>Kitab uses code blocks written in the documentation to generate tests
+(written in <a href="http://commonmark.org/">CommonMark</a>, as a reminder). A
+code block can have a type, such as <code>php</code>:</p>
+<pre><code>```php
+// here is some PHP code
+```
+</code></pre>
+<p>or <code>http</code>:</p>
+<pre><code>```http
+// here is some HTTP messages.
+```
+</code></pre>
+<p>A code block handler is a class that is able to compile code blocks of
+a given type into test case bodies. Also as a reminder, Kitab relies
+on <a href="https://atoum.org">atoum</a> for the test framework. Consequently,
+test cases must use the atoum API.</p>
+<p>When compiling code blocks into test cases, the target will loop over
+all attached code block handlers. If one of them is able to handle a
+specific code block, then it is used. Many code block handlers can
+handle the same code block.</p>
+<p>A code block handler must extend the
+<a href="./kitab/compiler/target/doctest/codeblockhandler/Definition.html"><code>Kitab\Compiler\Target\DocTest\CodeBlockHandler\Definition</code></a> interface.</p>
+<h1>About code block types</h1>
+<p>A code block type can have 3 forms:</p>
+<ol>
+<li>A single identifier, like <code>php</code>,</li>
+<li>A list of identifiers separated by a comma, like <code>php,ignore</code>,</li>
+<li>Or more sophisticated identifiers with arguments, like
+<code>php,must_throw(E)</code>.</li>
+</ol>
+<p>The format is not strict, but it should match these previous examples
+as most as possible for the sake of consistency. The main type (here
+<code>php</code>) should also be the former of the list, the other can sometimes
+be refered as options.</p>
+</section>
+    
+            <h2 id="classes">Classes</h2>
+
+        <ul class="list--table">
+                            <li>
+                    <a href="./kitab/compiler/target/doctest/codeblockhandler/IntoPHPTestCaseBody.html"><code>IntoPHPTestCaseBody</code></a>
+                    <p>A visitor to transform an Abstract Syntax Tree (AST) into a test case body
+candidate.</p>
+                </li>
+                            <li>
+                    <a href="./kitab/compiler/target/doctest/codeblockhandler/Php.html"><code>Php</code></a>
+                    <p>A code block handler for the <code>php</code> type.</p>
+                </li>
+                    </ul>
+    
+            <h2 id="interfaces">Interfaces</h2>
+
+        <ul class="list--table">
+                            <li>
+                    <a href="./kitab/compiler/target/doctest/codeblockhandler/Definition.html"><code>Definition</code></a>
+                    <p>Define a code block handler.</p>
+                </li>
+                    </ul>
+    
+    
+    
+    </article>
+        </main>
+
+        <script src="./javascript/prism.js"></script>
+        <script src="./javascript/prism-hooks.js"></script>
+        <script src="./javascript/search.elm.js" defer></script>
+        <script src="./javascript/search-index.js" defer></script>
+        <script src="./javascript/search-metadata.js" defer></script>
+        <script src="./javascript/application.js" defer></script>
+    </body>
+</html>

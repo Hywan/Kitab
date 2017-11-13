@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+
+<html lang="en" prefix="og: http://ogp.me/ns#">
+    <head>
+        <base href="./../../../../" />
+        <title>Kitab\Compiler\Target\DocTest\Configuration from Kitab</title>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <meta http-equiv="content-type" content="text/javascript; charset=utf-8" />
+        <meta http-equiv="content-type" content="text/css; charset=utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <link rel="preload" href="./css/main.css" as="style" />
+        <link rel="preload" href="./javascript/prism.js" as="script" />
+        <link rel="preload" href="./javascript/prism-hooks.js" as="script" />
+        <link rel="preload" href="./javascript/search.elm.js" as="script" />
+        <link rel="preload" href="./javascript/search-index.js" as="script" />
+        <link rel="preload" href="./javascript/search-metadata.js" as="script" />
+        <link rel="preload" href="./javascript/application.js" as="script" />
+
+        <link rel="stylesheet" href="./css/main.css" media="all" />
+        <link rel="stylesheet" href="./css/prism.css" media="all" />
+
+        <link rel="icon" type="image/png" href="./resource/logo_32x32.png" sizes="32x32" />
+        <link rel="icon" type="image/png" href="./resource/logo_192x192.png" sizes="192x192" />
+
+        <meta name="generator" content="Kitab (https://hoa-project.net/)" />
+        <meta name="description" content="Kitab\Compiler\Target\DocTest\Configuration from Kitab">
+
+        <meta property="og:title" content="Kitab\Compiler\Target\DocTest\Configuration from Kitab" />
+        <meta property="og:type" content="website" />
+        <meta proprery="og:image" content="https://raw.githubusercontent.com/hoaproject/Kitab/master/resource/logo.svg?sanitize=true" />
+
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:creator" content="@hoaproject" />
+        <meta name="twitter:text:title" content="Kitab\Compiler\Target\DocTest\Configuration from Kitab" />
+        <meta name="twitter:image:src" content="https://raw.githubusercontent.com/hoaproject/Kitab/master/resource/logo.svg?sanitize=true" />
+        <meta name="twitter:image:alt" content="Kitab" />
+    </head>
+    <body>
+        <div id="search" role="search">
+            <div>
+                <input type="search" placeholder="Initializing search…" disabled />
+            </div>
+        </div>
+
+        <main>
+            <aside>
+    <header>
+        <a href="./">
+            <img src="https://raw.githubusercontent.com/hoaproject/Kitab/master/resource/logo.svg?sanitize=true" alt="Home" />
+        </a>
+    </header>
+
+    <nav>
+        <h1><code><a href="./kitab/index.html">Kitab</a>\<wbr /><a href="./kitab/compiler/index.html">Compiler</a>\<wbr /><a href="./kitab/compiler/target/index.html">Target</a>\<wbr /><a href="./kitab/compiler/target/doctest/index.html">DocTest</a></code></h1>
+
+                    <h2>Classes</h2>
+
+            <ul class="list--flat">
+                                    <li><a href="./kitab/compiler/target/doctest/Configuration.html"><code>Configuration</code></a></li>
+                                    <li><a href="./kitab/compiler/target/doctest/DocTest.html"><code>DocTest</code></a></li>
+                            </ul>
+        
+        
+        
+            </nav>
+</aside>
+
+<article>
+    <h1>
+    Class <code>Kitab\Compiler\Target\DocTest\Configuration</code>
+    <aside>
+        <a href="./kitab/compiler/target/doctest/Configuration.source.html#L.59-95" title="View source">[src]</a>
+    </aside>
+</h1>
+
+<pre><code class="language-php">class Configuration extends Kitab\Configuration
+{
+}</code></pre>
+
+<section class="entity__description"><p>Configuration structure for the DocTest target.</p>
+<p>This structure contains all the configuration items used by the DocTest
+target of Kitab. It extends the default Kitab configuration structure.</p>
+<h1>Examples</h1>
+<pre><code class="language-php">$configuration                      = new Kitab\Compiler\Target\DocTest\Configuration();
+$configuration-&gt;concurrentProcesses = 2;
+
+assert(2 === $configuration-&gt;concurrentProcesses);
+</code></pre>
+</section>
+
+
+    <h2 id="attributes">Attributes</h2>
+
+    <dl class="entity__children">
+                    <dt aria-label="autoloaderFile"><code class="language-php">public $autoloaderFile = null;</code></dt>
+            <dd>
+                <section><p>Path to the autoloader file.</p>
+<p>Tests are likely to require an autoloader to load entities, like
+classes. If Composer is used as a dependency manager, then the
+autoloader file should be <code>vendor/autoload.php</code>.</p>
+</section>
+            </dd>
+                    <dt aria-label="concurrentProcesses"><code class="language-php">public $concurrentProcesses = 4;</code></dt>
+            <dd>
+                <section><p>Maximum concurrent processes that can be used to run the tests.</p>
+</section>
+            </dd>
+                    <dt aria-label="bypassCache"><code class="language-php">public $bypassCache = false;</code></dt>
+            <dd>
+                <section><p>Bypass the compilation cache.</p>
+<p>If <code>true</code>, the compiler will compile test suites like it is for the
+first time.</p>
+</section>
+            </dd>
+                    <dt aria-label="codeBlockHandlerNames"><code class="language-php">public $codeBlockHandlerNames = [\Kitab\Compiler\Target\DocTest\CodeBlockHandler\Php::class];</code></dt>
+            <dd>
+                <section><p>Code block handlers.</p>
+<p>List of code block handler class names. A handler is responsible to
+compile a code block content into a test case body. If you write your
+own code block handlers, it is the correct place to declare them.</p>
+<p>The code block handler for <code>php</code> code block type is already declared.</p>
+</section>
+            </dd>
+            </dl>
+
+
+</article>
+        </main>
+
+        <script src="./javascript/prism.js"></script>
+        <script src="./javascript/prism-hooks.js"></script>
+        <script src="./javascript/search.elm.js" defer></script>
+        <script src="./javascript/search-index.js" defer></script>
+        <script src="./javascript/search-metadata.js" defer></script>
+        <script src="./javascript/application.js" defer></script>
+    </body>
+</html>

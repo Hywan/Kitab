@@ -9,21 +9,32 @@
         <meta http-equiv="content-type" content="text/css; charset=utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-        <meta name="generator" content="Kitab (https://hoa-project.net/)" />
+        <link rel="preload" href="./css/main.css" as="style" />
+        <link rel="preload" href="./javascript/prism.js" as="script" />
+        <link rel="preload" href="./javascript/prism-hooks.js" as="script" />
+        <link rel="preload" href="./javascript/search.elm.js" as="script" />
+        <link rel="preload" href="./javascript/search-index.js" as="script" />
+        <link rel="preload" href="./javascript/search-metadata.js" as="script" />
+        <link rel="preload" href="./javascript/application.js" as="script" />
 
+        <link rel="stylesheet" href="./css/main.css" media="all" />
+        <link rel="stylesheet" href="./css/prism.css" media="all" />
+
+        <link rel="icon" type="image/png" href="./resource/logo_32x32.png" sizes="32x32" />
+        <link rel="icon" type="image/png" href="./resource/logo_192x192.png" sizes="192x192" />
+
+        <meta name="generator" content="Kitab (https://hoa-project.net/)" />
         <meta name="description" content="Source of Kitab\Bin\Test from Kitab">
 
         <meta property="og:title" content="Source of Kitab\Bin\Test from Kitab" />
         <meta property="og:type" content="website" />
-        <meta proprery="og:image" content="https://placehold.it/150x150" />
+        <meta proprery="og:image" content="https://raw.githubusercontent.com/hoaproject/Kitab/master/resource/logo.svg?sanitize=true" />
 
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:creator" content="@hoaproject" />
         <meta name="twitter:text:title" content="Source of Kitab\Bin\Test from Kitab" />
-        <meta name="twitter:img:src" content="https://placehold.it/150x150" />
-
-        <link rel="stylesheet" href="./css/main.css" media="all" />
-        <link rel="stylesheet" href="./css/prism.css" media="all" />
+        <meta name="twitter:image:src" content="https://raw.githubusercontent.com/hoaproject/Kitab/master/resource/logo.svg?sanitize=true" />
+        <meta name="twitter:image:alt" content="Kitab" />
     </head>
     <body>
         <div id="search" role="search">
@@ -36,7 +47,7 @@
             <aside>
     <header>
         <a href="./">
-            <img src="https://placehold.it/150x150" alt="Home" />
+            <img src="https://raw.githubusercontent.com/hoaproject/Kitab/master/resource/logo.svg?sanitize=true" alt="Home" />
         </a>
     </header>
 </aside>
@@ -89,8 +100,9 @@ use Hoa\File;
 use Hoa\File\Temporary\Temporary;
 use Hoa\Protocol\Protocol;
 use Kitab\Compiler\Compiler;
-use Kitab\Compiler\Target\DocTest\DocTest;
+use Kitab\Compiler\Target\DocTest;
 use Kitab\Finder;
+use RuntimeException;
 
 class Test extends Console\Dispatcher\Kit
 {
@@ -98,9 +110,11 @@ class Test extends Console\Dispatcher\Kit
      * Options description.
      */
     protected $options = [
+        ['configuration-file',   Console\GetOption::REQUIRED_ARGUMENT, 'c'],
         ['autoloader',           Console\GetOption::REQUIRED_ARGUMENT, 'l'],
         ['output-directory',     Console\GetOption::REQUIRED_ARGUMENT, 'o'],
         ['concurrent-processes', Console\GetOption::REQUIRED_ARGUMENT, 'p'],
+        ['bypass-cache',         Console\GetOption::NO_ARGUMENT,       'C'],
         ['verbose',              Console\GetOption::NO_ARGUMENT,       'v'],
         ['help',                 Console\GetOption::NO_ARGUMENT,       'h'],
         ['help',                 Console\GetOption::NO_ARGUMENT,       '?']
@@ -113,30 +127,59 @@ class Test extends Console\Dispatcher\Kit
      */
     public function run(): int
     {
+        $configuration       = new DocTest\Configuration();
         $autoloader          = null;
         $outputDirectory     = null;
         $directoryToScan     = null;
         $concurrentProcesses = 4;
         $verbose             = false;
+        $compilationCache   = true;
 
         while (false !== $c = $this-&gt;getOption($v)) {
             switch ($c) {
+                case 'c':
+                    if (false === file_exists($v)) {
+                        throw new RuntimeException(
+                            'Tried to load the configuration file ' . $v . ', but the file does not exist.'
+                        );
+                    }
+
+                    $_configuration = (function () use ($v) {
+                        return require $v;
+                    })();
+
+                    if (!($_configuration instanceof DocTest\Configuration)) {
+                        throw new RuntimeException(
+                            'The configuration file ' . $v . ' exists, but it returns ' .
+                            'a value that is _not_ an object of kind ' . DocTest\Configuration::class . '.'
+                        );
+                    }
+
+                    $configuration = $_configuration;
+
+                    break;
+
                 case 'o':
                     $outputDirectory = $v;
 
                     break;
 
                 case 'l':
-                    $autoloader = $v;
-
-                    if (false === file_exists($autoloader)) {
-                        throw new \RuntimeException('Autoloader file `' . $autoloader . '` does not exist.');
+                    if (false === file_exists($v)) {
+                        throw new RuntimeException('Autoloader file `' . $v . '` does not exist.');
                     }
+
+                    $configuration-&gt;autoloaderFile = $v;
 
                     break;
 
                 case 'p':
-                    $concurrentProcesses = max(1, intval($v));
+                    $configuration-&gt;concurrentProcesses = max(1, intval($v));
+
+                    break;
+
+                case 'C':
+                    $configuration-&gt;bypassCache = $v;
 
                     break;
 
@@ -158,14 +201,14 @@ class Test extends Console\Dispatcher\Kit
             }
         }
 
-        if (empty($autoloader) &amp;&amp; true === file_exists('vendor' . DS . 'autoload.php')) {
-            $autoloader = realpath('vendor' . DS . 'autoload.php');
+        if (empty($configuration-&gt;autoloaderFile) &amp;&amp; true === file_exists('vendor' . DS . 'autoload.php')) {
+            $configuration-&gt;autoloaderFile = realpath('vendor' . DS . 'autoload.php');
         }
 
         $this-&gt;parser-&gt;listInputs($directoryToScan);
 
         if (empty($directoryToScan)) {
-            throw new \RuntimeException(
+            throw new RuntimeException(
                 'Directory to scan must not be empty.' . &quot;\n&quot; .
                 'Retry with `' . implode(' ', $_SERVER['argv']) . ' src` ' .
                 'to test the documentation inside the `src` directory.'
@@ -173,7 +216,7 @@ class Test extends Console\Dispatcher\Kit
         }
 
         if (false === is_dir($directoryToScan)) {
-            throw new \RuntimeException(
+            throw new RuntimeException(
                 'Directory to scan `' . $directoryToScan . '` does not exist.'
             );
         }
@@ -195,14 +238,18 @@ class Test extends Console\Dispatcher\Kit
             -&gt;in($directoryToScan)
             -&gt;notIn('/^vendor$/');
 
-        if (is_dir($outputDirectory)) {
+        if (false === is_dir($outputDirectory)) {
+            File\Directory::create($outputDirectory);
+        } elseif (false === $configuration-&gt;bypassCache) {
             $since = time() - filemtime($outputDirectory);
             $finder-&gt;modified('since ' . $since . ' seconds');
-        } else {
-            File\Directory::create($outputDirectory);
         }
 
-        $target = new DocTest();
+        $target = new DocTest\DocTest();
+
+        foreach ($configuration-&gt;codeBlockHandlerNames as $codeBlockHandlerName) {
+            $target-&gt;addCodeBlockHandler(new $codeBlockHandlerName);
+        }
 
         $compiler = new Compiler();
         $compiler-&gt;compile($finder, $target);
@@ -217,7 +264,7 @@ class Test extends Console\Dispatcher\Kit
                 '&lt;?php' . &quot;\n\n&quot; .
                 'Phar::loadPhar(\'' . KITAB_PHAR_PATH . '\', \'' . KITAB_PHAR_NAME . '\');' . &quot;\n\n&quot; .
                 'require_once \'phar://'. KITAB_PHAR_NAME .'/vendor/autoload.php\';' . &quot;\n&quot; .
-                (!empty($autoloader) ? 'require_once \'' . str_replace(&quot;'&quot;, &quot;\\'&quot;, realpath($autoloader)) . '\';' : '')
+                (!empty($configuration-&gt;autoloaderFile) ? 'require_once \'' . str_replace(&quot;'&quot;, &quot;\\'&quot;, realpath($configuration-&gt;autoloaderFile)) . '\';' : '')
             );
 
             $autoloader = $temporaryAutoloader-&gt;getStreamName();
@@ -235,10 +282,10 @@ class Test extends Console\Dispatcher\Kit
             $temporaryAutoloader-&gt;writeAll(
                 '&lt;?php' . &quot;\n\n&quot; .
                 'require_once \'' . str_replace(&quot;'&quot;, &quot;\\'&quot;, $composerAutoloader) . '\';' . &quot;\n&quot; .
-                (!empty($autoloader) ? 'require_once \'' . str_replace(&quot;'&quot;, &quot;\\'&quot;, realpath($autoloader)) . '\';' : '')
+                (!empty($configuration-&gt;autoloaderFile) ? 'require_once \'' . str_replace(&quot;'&quot;, &quot;\\'&quot;, realpath($configuration-&gt;autoloaderFile)) . '\';' : '')
             );
 
-            $autoloader = $temporaryAutoloader-&gt;getStreamName();
+            $configuration-&gt;autoloaderFile = $temporaryAutoloader-&gt;getStreamName();
         }
 
         if (true === $verbose) {
@@ -247,11 +294,11 @@ class Test extends Console\Dispatcher\Kit
 
         $command .=
             ' --autoloader-file ' .
-                escapeshellarg($autoloader) .
+                escapeshellarg($configuration-&gt;autoloaderFile) .
             ' --force-terminal' .
             ' --no-code-coverage' .
             ' --max-children-number ' .
-                $concurrentProcesses .
+                $configuration-&gt;concurrentProcesses .
             ' --directories ' .
                 escapeshellarg($outputDirectory);
 
@@ -292,9 +339,14 @@ class Test extends Console\Dispatcher\Kit
             'Usage   : test &lt;options&gt; directory-to-scan', &quot;\n&quot;,
             'Options :', &quot;\n&quot;,
             $this-&gt;makeUsageOptionsList([
+                'c'    =&gt; 'Path to a PHP file returning a `' . DocTest\Configuration::class . '` ' .
+                          'instance to be the default configuration. All the other options ' .
+                          'in this command-line will overwrite the items in the configuration. ' .
+                          'If used, it must be the first option in the command-line.',
                 'l'    =&gt; 'Path to the autoloader file.',
                 'o'    =&gt; 'Directory that will receive the generated documentation test suites.',
                 'p'    =&gt; 'Maximum concurrent processes that can run.',
+                'C'    =&gt; 'Bypass the cache; compile test suites like it is for the first time.',
                 'v'    =&gt; 'Be verbose (add some debug information).',
                 'help' =&gt; 'This help.'
             ]);
@@ -304,11 +356,11 @@ class Test extends Console\Dispatcher\Kit
 </article>
         </main>
 
-        <script type="text/javascript" src="./javascript/search.elm.js"></script>
-        <script type="text/javascript" src="./javascript/search-index.js"></script>
-        <script type="text/javascript" src="./javascript/search-metadata.js"></script>
-        <script type="text/javascript" src="./javascript/application.js"></script>
-        <script type="text/javascript" src="./javascript/prism.js"></script>
-        <script type="text/javascript" src="./javascript/prism-hooks.js" async defer></script>
+        <script src="./javascript/prism.js"></script>
+        <script src="./javascript/prism-hooks.js"></script>
+        <script src="./javascript/search.elm.js" defer></script>
+        <script src="./javascript/search-index.js" defer></script>
+        <script src="./javascript/search-metadata.js" defer></script>
+        <script src="./javascript/application.js" defer></script>
     </body>
 </html>

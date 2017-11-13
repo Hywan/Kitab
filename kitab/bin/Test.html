@@ -9,21 +9,32 @@
         <meta http-equiv="content-type" content="text/css; charset=utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-        <meta name="generator" content="Kitab (https://hoa-project.net/)" />
+        <link rel="preload" href="./css/main.css" as="style" />
+        <link rel="preload" href="./javascript/prism.js" as="script" />
+        <link rel="preload" href="./javascript/prism-hooks.js" as="script" />
+        <link rel="preload" href="./javascript/search.elm.js" as="script" />
+        <link rel="preload" href="./javascript/search-index.js" as="script" />
+        <link rel="preload" href="./javascript/search-metadata.js" as="script" />
+        <link rel="preload" href="./javascript/application.js" as="script" />
 
+        <link rel="stylesheet" href="./css/main.css" media="all" />
+        <link rel="stylesheet" href="./css/prism.css" media="all" />
+
+        <link rel="icon" type="image/png" href="./resource/logo_32x32.png" sizes="32x32" />
+        <link rel="icon" type="image/png" href="./resource/logo_192x192.png" sizes="192x192" />
+
+        <meta name="generator" content="Kitab (https://hoa-project.net/)" />
         <meta name="description" content="Kitab\Bin\Test from Kitab">
 
         <meta property="og:title" content="Kitab\Bin\Test from Kitab" />
         <meta property="og:type" content="website" />
-        <meta proprery="og:image" content="https://placehold.it/150x150" />
+        <meta proprery="og:image" content="https://raw.githubusercontent.com/hoaproject/Kitab/master/resource/logo.svg?sanitize=true" />
 
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:creator" content="@hoaproject" />
         <meta name="twitter:text:title" content="Kitab\Bin\Test from Kitab" />
-        <meta name="twitter:img:src" content="https://placehold.it/150x150" />
-
-        <link rel="stylesheet" href="./css/main.css" media="all" />
-        <link rel="stylesheet" href="./css/prism.css" media="all" />
+        <meta name="twitter:image:src" content="https://raw.githubusercontent.com/hoaproject/Kitab/master/resource/logo.svg?sanitize=true" />
+        <meta name="twitter:image:alt" content="Kitab" />
     </head>
     <body>
         <div id="search" role="search">
@@ -36,7 +47,7 @@
             <aside>
     <header>
         <a href="./">
-            <img src="https://placehold.it/150x150" alt="Home" />
+            <img src="https://raw.githubusercontent.com/hoaproject/Kitab/master/resource/logo.svg?sanitize=true" alt="Home" />
         </a>
     </header>
 
@@ -62,7 +73,7 @@
     <h1>
     Class <code>Kitab\Bin\Test</code>
     <aside>
-        <a href="./kitab/bin/Test.source.html#L.51-258" title="View source">[src]</a>
+        <a href="./kitab/bin/Test.source.html#L.52-299" title="View source">[src]</a>
     </aside>
 </h1>
 
@@ -78,7 +89,7 @@
     <h2 id="attributes">Attributes</h2>
 
     <dl class="entity__children">
-                    <dt aria-label="options"><code class="language-php">protected $options = [['autoloader', \Hoa\Console\GetOption::REQUIRED_ARGUMENT, 'l'], ['output-directory', \Hoa\Console\GetOption::REQUIRED_ARGUMENT, 'o'], ['concurrent-processes', \Hoa\Console\GetOption::REQUIRED_ARGUMENT, 'p'], ['verbose', \Hoa\Console\GetOption::NO_ARGUMENT, 'v'], ['help', \Hoa\Console\GetOption::NO_ARGUMENT, 'h'], ['help', \Hoa\Console\GetOption::NO_ARGUMENT, '?']];</code></dt>
+                    <dt aria-label="options"><code class="language-php">protected $options = [['configuration-file', \Hoa\Console\GetOption::REQUIRED_ARGUMENT, 'c'], ['autoloader', \Hoa\Console\GetOption::REQUIRED_ARGUMENT, 'l'], ['output-directory', \Hoa\Console\GetOption::REQUIRED_ARGUMENT, 'o'], ['concurrent-processes', \Hoa\Console\GetOption::REQUIRED_ARGUMENT, 'p'], ['bypass-cache', \Hoa\Console\GetOption::NO_ARGUMENT, 'C'], ['verbose', \Hoa\Console\GetOption::NO_ARGUMENT, 'v'], ['help', \Hoa\Console\GetOption::NO_ARGUMENT, 'h'], ['help', \Hoa\Console\GetOption::NO_ARGUMENT, '?']];</code></dt>
             <dd>
                 <section><p>Options description.</p>
 </section>
@@ -90,7 +101,7 @@
     <dl class="entity__children">
                     <dt aria-label="run">
                 <code class="language-php">public function run(): int</code>
-                <aside><a href="./kitab/bin/Test.source.html#L.70-240" title="View source of the `run` method">[src]</a></aside>
+                <aside><a href="./kitab/bin/Test.source.html#L.73-276" title="View source of the `run` method">[src]</a></aside>
             </dt>
             <dd>
                 <section><p>The entry method.</p>
@@ -98,7 +109,7 @@
             </dd>
                     <dt aria-label="usage">
                 <code class="language-php">public function usage()</code>
-                <aside><a href="./kitab/bin/Test.source.html#L.245-257" title="View source of the `usage` method">[src]</a></aside>
+                <aside><a href="./kitab/bin/Test.source.html#L.281-298" title="View source of the `usage` method">[src]</a></aside>
             </dt>
             <dd>
                 <section><p>Print help.</p>
@@ -109,11 +120,11 @@
 </article>
         </main>
 
-        <script type="text/javascript" src="./javascript/search.elm.js"></script>
-        <script type="text/javascript" src="./javascript/search-index.js"></script>
-        <script type="text/javascript" src="./javascript/search-metadata.js"></script>
-        <script type="text/javascript" src="./javascript/application.js"></script>
-        <script type="text/javascript" src="./javascript/prism.js"></script>
-        <script type="text/javascript" src="./javascript/prism-hooks.js" async defer></script>
+        <script src="./javascript/prism.js"></script>
+        <script src="./javascript/prism-hooks.js"></script>
+        <script src="./javascript/search.elm.js" defer></script>
+        <script src="./javascript/search-index.js" defer></script>
+        <script src="./javascript/search-metadata.js" defer></script>
+        <script src="./javascript/application.js" defer></script>
     </body>
 </html>

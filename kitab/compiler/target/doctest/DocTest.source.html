@@ -9,21 +9,32 @@
         <meta http-equiv="content-type" content="text/css; charset=utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-        <meta name="generator" content="Kitab (https://hoa-project.net/)" />
+        <link rel="preload" href="./css/main.css" as="style" />
+        <link rel="preload" href="./javascript/prism.js" as="script" />
+        <link rel="preload" href="./javascript/prism-hooks.js" as="script" />
+        <link rel="preload" href="./javascript/search.elm.js" as="script" />
+        <link rel="preload" href="./javascript/search-index.js" as="script" />
+        <link rel="preload" href="./javascript/search-metadata.js" as="script" />
+        <link rel="preload" href="./javascript/application.js" as="script" />
 
+        <link rel="stylesheet" href="./css/main.css" media="all" />
+        <link rel="stylesheet" href="./css/prism.css" media="all" />
+
+        <link rel="icon" type="image/png" href="./resource/logo_32x32.png" sizes="32x32" />
+        <link rel="icon" type="image/png" href="./resource/logo_192x192.png" sizes="192x192" />
+
+        <meta name="generator" content="Kitab (https://hoa-project.net/)" />
         <meta name="description" content="Source of Kitab\Compiler\Target\DocTest\DocTest from Kitab">
 
         <meta property="og:title" content="Source of Kitab\Compiler\Target\DocTest\DocTest from Kitab" />
         <meta property="og:type" content="website" />
-        <meta proprery="og:image" content="https://placehold.it/150x150" />
+        <meta proprery="og:image" content="https://raw.githubusercontent.com/hoaproject/Kitab/master/resource/logo.svg?sanitize=true" />
 
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:creator" content="@hoaproject" />
         <meta name="twitter:text:title" content="Source of Kitab\Compiler\Target\DocTest\DocTest from Kitab" />
-        <meta name="twitter:img:src" content="https://placehold.it/150x150" />
-
-        <link rel="stylesheet" href="./css/main.css" media="all" />
-        <link rel="stylesheet" href="./css/prism.css" media="all" />
+        <meta name="twitter:image:src" content="https://raw.githubusercontent.com/hoaproject/Kitab/master/resource/logo.svg?sanitize=true" />
+        <meta name="twitter:image:alt" content="Kitab" />
     </head>
     <body>
         <div id="search" role="search">
@@ -36,7 +47,7 @@
             <aside>
     <header>
         <a href="./">
-            <img src="https://placehold.it/150x150" alt="Home" />
+            <img src="https://raw.githubusercontent.com/hoaproject/Kitab/master/resource/logo.svg?sanitize=true" alt="Home" />
         </a>
     </header>
 </aside>
@@ -86,14 +97,11 @@ use Generator;
 use Hoa\File\Directory;
 use Hoa\File\Write;
 use Kitab\Compiler\IntermediateRepresentation;
-use Kitab\Compiler\Parser;
 use Kitab\Compiler\Target\Target;
 use Kitab\Configuration;
 use Kitab\Exception;
 use League\CommonMark;
-use PhpParser\NodeTraverser;
-use PhpParser\NodeVisitor;
-use PhpParser\PrettyPrinter;
+use RuntimeException;
 
 class DocTest implements Target
 {
@@ -101,8 +109,22 @@ class DocTest implements Target
     const EXCEPTIONS_SECTION = 'Exceptions';
 
     protected static $_markdownParser = null;
-    protected static $_phpTraverser   = null;
     protected $_generatedTestSuites   = [];
+    protected $_codeBlockHandlers     = [];
+
+    public function addCodeBlockHandler(CodeBlockHandler\Definition $codeBlockHandler): self
+    {
+        $this-&gt;_codeBlockHandlers[$codeBlockHandler-&gt;getDefinitionName()] = $codeBlockHandler;
+
+        return $this;
+    }
+
+    public function removeCodeBlockHandler(CodeBlockHandler\Definition $codeBlockHandler): self
+    {
+        unset($this-&gt;_codeBlockHandlers[$codeBlockHandler-&gt;getDefinitionName()]);
+
+        return $this;
+    }
 
     public function compile(IntermediateRepresentation\File $file)
     {
@@ -138,6 +160,7 @@ class DocTest implements Target
 
         $output = new Write($fileName, Write::MODE_TRUNCATE_WRITE);
         $output-&gt;writeAll($testSuites);
+        $output-&gt;close();
     }
 
     protected function compileEntity(IntermediateRepresentation\Entity $entity): string
@@ -146,20 +169,30 @@ class DocTest implements Target
 
         // Introduction.
         foreach ($this-&gt;getCodeBlocks($entity-&gt;documentation) as $i =&gt; $codeBlock) {
-            $testCases .= $this-&gt;compileToTestCase(
-                '0introduction_' . $i, // start with `0` to avoid conflict with existing identifier.
-                $codeBlock
-            );
+            foreach (
+                $this-&gt;compileToTestCases(
+                    '0introduction_' . $i, // start with `0` to avoid conflict with existing identifier.
+                    $codeBlock
+                )
+                as $testCase
+            ) {
+                $testCases .= $testCase;
+            }
         }
 
         // Methods
         if ($entity instanceof IntermediateRepresentation\HasMethods) {
             foreach ($entity-&gt;getMethods() as $method) {
                 foreach ($this-&gt;getCodeBlocks($method-&gt;documentation) as $i =&gt; $codeBlock) {
-                    $testCases .= $this-&gt;compileToTestCase(
-                        $method-&gt;name . '_' . $i,
-                        $codeBlock
-                    );
+                    foreach (
+                        $this-&gt;compileToTestCases(
+                            $method-&gt;name . '_' . $i,
+                            $codeBlock
+                        )
+                        as $testCase
+                    ) {
+                        $testCases .= $testCase;
+                    }
                 }
             }
         }
@@ -170,7 +203,7 @@ class DocTest implements Target
 
         return
             sprintf(
-                'namespace Kitab\Generated\DocTest%s {' . &quot;\n\n&quot; .
+                'namespace Kitab\Generated\DocTest%s' . &quot;\n&quot; . '{' . &quot;\n\n&quot; .
                 'class %s extends \Kitab\DocTest\Suite' . &quot;\n&quot; .
                 '{',
                 $entity-&gt;inNamespace() ? '\\' . $entity-&gt;getNamespaceName() : '',
@@ -239,90 +272,58 @@ class DocTest implements Target
                     $hashes[] = $hash;
                 }
 
-                $type = trim($childNode-&gt;getInfo());
-
-                if (empty($type)) {
-                    $type = 'php';
-                }
-
-                if (0 === preg_match('/\bphp\b/', $type)) {
-                    continue;
-                }
-
-                $code = $this-&gt;unfoldCode($childNode-&gt;getStringContent());
-
                 yield [
-                    'type' =&gt; $type,
-                    'code' =&gt; $code
+                    'type'    =&gt; trim($childNode-&gt;getInfo()),
+                    'content' =&gt; $childNode-&gt;getStringContent()
                 ];
             }
         }
     }
 
-    protected function unfoldCode(string $phpCode): string
+    protected function compileToTestCases(string $testCaseName, array $codeBlock): Generator
     {
-        $ast = Parser::getPhpParser()-&gt;parse('&lt;?php ' . $phpCode);
-        $ast = self::getPhpTraverser()-&gt;traverse($ast);
+        if (empty($this-&gt;_codeBlockHandlers)) {
+            throw new RuntimeException(
+                'Target `' . __CLASS__ . '` has no code block handlers. ' .
+                'Use the `' . __CLASS__ . '::addCodeBlockHandler` method to add ' .
+                'at least one code block handler to compile test cases.'
+            );
+        }
 
-        return Parser::getPhpPrettyPrinter()-&gt;prettyPrint($ast);
-    }
+        $suffix = &quot;\n&quot; . '    }' . &quot;\n&quot;;
 
-    protected function compileToTestCase(string $testCaseName, array $codeBlock): string
-    {
-        $prefix =
-            &quot;\n&quot; .
-            '    public function case_' . $testCaseName . '()' . &quot;\n&quot; .
-            '    {' . &quot;\n&quot;;
-        $suffix =
-            &quot;\n&quot; .
-            '    }' . &quot;\n&quot;;
+        foreach ($this-&gt;_codeBlockHandlers as $codeBlockHandler) {
+            $prefix =
+                &quot;\n&quot; .
+                '    public function case_' . $testCaseName . '_' . $codeBlockHandler-&gt;getDefinitionName() . '()' . &quot;\n&quot; .
+                '    {' . &quot;\n&quot;;
 
-        if (0 !== preg_match('/\bignore\b/', $codeBlock['type'])) {
-            return
+            if (false === $codeBlockHandler-&gt;mightHandleCodeBlock($codeBlock['type'])) {
+                yield
+                    $prefix .
+                    '        ' .
+                    sprintf(
+                        '$this-&gt;skip(\'Skipped because there is no handler for the code block of type `%s`.\');',
+                        $codeBlock['type']
+                    ) .
+                    $suffix;
+
+                continue;
+            }
+
+            yield
                 $prefix .
-                sprintf(
-                    '        $this' . &quot;\n&quot; .
-                    '            -&gt;skip(\'Skipped because ' .
-                    'the code block type contains `ignore`: `%s`.\');',
-                    $codeBlock['type']
+                '        ' .
+                str_replace(
+                    &quot;\n&quot;,
+                    &quot;\n&quot; . '        ',
+                    $codeBlockHandler-&gt;compileToTestCaseBody(
+                        $codeBlock['type'],
+                        $codeBlock['content']
+                    )
                 ) .
                 $suffix;
         }
-
-
-        if (0 !== preg_match('/\bmust_throw(?:\(([^\)]+)\)|\b)/', $codeBlock['type'], $matches)) {
-            return
-                $prefix .
-                sprintf(
-                        '        $this' . &quot;\n&quot; .
-                    '            -&gt;exception(function () {' . &quot;\n&quot; .
-                    '                %s' . &quot;\n&quot; .
-                    '            })' . &quot;\n&quot; .
-                    '                -&gt;isInstanceOf(\'%s\');',
-                    preg_replace(
-                        '/^\h+$/m',
-                        '',
-                        str_replace(&quot;\n&quot;, &quot;\n&quot; . '                ', $codeBlock['code'])
-                    ),
-                    isset($matches[1]) ? $matches[1] : 'Exception'
-                ) .
-                $suffix;
-        }
-
-        return
-            $prefix .
-                sprintf(
-                '        $this' . &quot;\n&quot; .
-                '            -&gt;assert(function () {' . &quot;\n&quot; .
-                '                %s' . &quot;\n&quot; .
-                '            });',
-                preg_replace(
-                    '/^\h+$/m',
-                    '',
-                    str_replace(&quot;\n&quot;, &quot;\n&quot; . '                ', $codeBlock['code'])
-                )
-            ) .
-            $suffix;
     }
 
     protected function getMarkdownParser()
@@ -334,17 +335,6 @@ class DocTest implements Target
         }
 
         return static::$_markdownParser;
-    }
-
-    protected static function getPhpTraverser(): NodeTraverser
-    {
-        if (null === self::$_phpTraverser) {
-            self::$_phpTraverser = new NodeTraverser();
-            self::$_phpTraverser-&gt;addVisitor(new NodeVisitor\NameResolver());
-            self::$_phpTraverser-&gt;addVisitor(new IntoTestCaseBody());
-        }
-
-        return self::$_phpTraverser;
     }
 
     protected function computeTestSuiteShortName(string $shortName, string $longName): string
@@ -362,11 +352,11 @@ class DocTest implements Target
 </article>
         </main>
 
-        <script type="text/javascript" src="./javascript/search.elm.js"></script>
-        <script type="text/javascript" src="./javascript/search-index.js"></script>
-        <script type="text/javascript" src="./javascript/search-metadata.js"></script>
-        <script type="text/javascript" src="./javascript/application.js"></script>
-        <script type="text/javascript" src="./javascript/prism.js"></script>
-        <script type="text/javascript" src="./javascript/prism-hooks.js" async defer></script>
+        <script src="./javascript/prism.js"></script>
+        <script src="./javascript/prism-hooks.js"></script>
+        <script src="./javascript/search.elm.js" defer></script>
+        <script src="./javascript/search-index.js" defer></script>
+        <script src="./javascript/search-metadata.js" defer></script>
+        <script src="./javascript/application.js" defer></script>
     </body>
 </html>

@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+
+<html lang="en" prefix="og: http://ogp.me/ns#">
+    <head>
+        <base href="./../../../../../" />
+        <title>Source of Kitab\Compiler\Target\DocTest\CodeBlockHandler\Php from Kitab</title>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <meta http-equiv="content-type" content="text/javascript; charset=utf-8" />
+        <meta http-equiv="content-type" content="text/css; charset=utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <link rel="preload" href="./css/main.css" as="style" />
+        <link rel="preload" href="./javascript/prism.js" as="script" />
+        <link rel="preload" href="./javascript/prism-hooks.js" as="script" />
+        <link rel="preload" href="./javascript/search.elm.js" as="script" />
+        <link rel="preload" href="./javascript/search-index.js" as="script" />
+        <link rel="preload" href="./javascript/search-metadata.js" as="script" />
+        <link rel="preload" href="./javascript/application.js" as="script" />
+
+        <link rel="stylesheet" href="./css/main.css" media="all" />
+        <link rel="stylesheet" href="./css/prism.css" media="all" />
+
+        <link rel="icon" type="image/png" href="./resource/logo_32x32.png" sizes="32x32" />
+        <link rel="icon" type="image/png" href="./resource/logo_192x192.png" sizes="192x192" />
+
+        <meta name="generator" content="Kitab (https://hoa-project.net/)" />
+        <meta name="description" content="Source of Kitab\Compiler\Target\DocTest\CodeBlockHandler\Php from Kitab">
+
+        <meta property="og:title" content="Source of Kitab\Compiler\Target\DocTest\CodeBlockHandler\Php from Kitab" />
+        <meta property="og:type" content="website" />
+        <meta proprery="og:image" content="https://raw.githubusercontent.com/hoaproject/Kitab/master/resource/logo.svg?sanitize=true" />
+
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:creator" content="@hoaproject" />
+        <meta name="twitter:text:title" content="Source of Kitab\Compiler\Target\DocTest\CodeBlockHandler\Php from Kitab" />
+        <meta name="twitter:image:src" content="https://raw.githubusercontent.com/hoaproject/Kitab/master/resource/logo.svg?sanitize=true" />
+        <meta name="twitter:image:alt" content="Kitab" />
+    </head>
+    <body>
+        <div id="search" role="search">
+            <div>
+                <input type="search" placeholder="Initializing search…" disabled />
+            </div>
+        </div>
+
+        <main>
+            <aside>
+    <header>
+        <a href="./">
+            <img src="https://raw.githubusercontent.com/hoaproject/Kitab/master/resource/logo.svg?sanitize=true" alt="Home" />
+        </a>
+    </header>
+</aside>
+
+<article>
+    <pre id="L" data-line="," class="line-numbers"><code class="language-php no-wrap-hooks">&lt;?php
+
+declare(strict_types=1);
+
+/**
+ * Hoa
+ *
+ *
+ * @license
+ *
+ * New BSD License
+ *
+ * Copyright © 2007-2017, Hoa community. All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * Neither the name of the Hoa nor the names of its contributors may be
+ *       used to endorse or promote products derived from this software without
+ *       specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot;
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS AND CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ */
+
+namespace Kitab\Compiler\Target\DocTest\CodeBlockHandler;
+
+use Kitab\Compiler\Parser;
+use PhpParser\NodeTraverser;
+use PhpParser\NodeVisitor;
+use PhpParser\PrettyPrinter;
+
+/**
+ * A code block handler for the `php` type.
+ *
+ * This handler defines the `php` type with the following options:
+ *
+ *   * `php,ignore` to avoid compiling the code block into a test case. The code
+ *     block is just displayed in the documentation, but not tested,
+ *   * `php,must_throw` to indicate that the code block must throw an exception,
+ *     so catching an exception is expected,
+ *   * `php,must_throw(E)` to indicate that the code block must throw an
+ *     exception of kind `E`.
+ */
+class Php implements Definition
+{
+    /**
+     * A traverser, for PHP-Parser, is a set of visitors visiting the Abstract
+     * Syntax Tree produced by the parser. This traverser will be used to
+     * pretty print the PHP code, and to make it embeddable inside a test
+     * case.
+     *
+     * The traverser is allocated once, hence the static declaration.
+     */
+    protected static $_phpTraverser = null;
+
+    /**
+     * The handler name is `php`.
+     *
+     * # Examples
+     *
+     * ```php
+     * $handler = new Kitab\Compiler\Target\DocTest\CodeBlockHandler\Php();
+     *
+     * assert('php' === $handler-&gt;getDefinitionName());
+     * ```
+     */
+    public function getDefinitionName(): string
+    {
+        return 'php';
+    }
+
+    /**
+     * Check whether a code block type contains `php` or is empty. The
+     * consequence is that the `php` type will be assumed if a code block has
+     * no type.
+     *
+     * # Examples
+     *
+     * All the following type syntaxes are handled:
+     *
+     * ```php
+     * $handler = new Kitab\Compiler\Target\DocTest\CodeBlockHandler\Php();
+     *
+     * assert(true  === $handler-&gt;mightHandleCodeblock('php'));
+     * assert(true  === $handler-&gt;mightHandleCodeblock('php,ignore'));
+     * assert(true  === $handler-&gt;mightHandleCodeblock('php,must_throw'));
+     * assert(false === $handler-&gt;mightHandleCodeblock('foobar'));
+     * ```
+     *
+     * A code block with no type is assumed to be of type `php`:
+     *
+     * ```php
+     * $handler = new Kitab\Compiler\Target\DocTest\CodeBlockHandler\Php();
+     *
+     * assert($handler-&gt;mightHandleCodeblock(''));
+     * ```
+     */
+    public function mightHandleCodeblock(string $codeBlockType): bool
+    {
+        return empty($codeBlockType) || 0 !== preg_match('/\bphp\b/', $codeBlockType);
+    }
+
+    /**
+     * Unfold the code block content, and compile it into a test case.
+     *
+     * # Examples
+     *
+     * A regular code block content:
+     *
+     * ```php
+     * $handler = new Kitab\Compiler\Target\DocTest\CodeBlockHandler\Php();
+     *
+     * $codeBlockType    = 'php';
+     * $codeBlockContent = 'assert(true);';
+     * $output           =
+     *     '$this' . &quot;\n&quot; .
+     *     '    -&gt;assert(function () {' . &quot;\n&quot; .
+     *     '        \assert(\true);' . &quot;\n&quot; .
+     *     '    });';
+     *
+     * assert($output === $handler-&gt;compileToTestCaseBody($codeBlockType, $codeBlockContent));
+     * ```
+     *
+     * A code block that must not be tested:
+     *
+     * ```php
+     * $handler = new Kitab\Compiler\Target\DocTest\CodeBlockHandler\Php();
+     *
+     * $codeBlockType    = 'php,ignore';
+     * $codeBlockContent = 'assert(true);';
+     * $output           = '$this-&gt;skip(\'Skipped because the code block type contains `ignore`: `php,ignore`.\');';
+     *
+     * assert($output === $handler-&gt;compileToTestCaseBody($codeBlockType, $codeBlockContent));
+     * ```
+     *
+     * A code block that must throw an exception of kind `E`:
+     *
+     * ```php
+     * $handler = new Kitab\Compiler\Target\DocTest\CodeBlockHandler\Php();
+     *
+     * $codeBlockType    = 'php,must_throw(E)';
+     * $codeBlockContent = 'assert(true);';
+     * $output           =
+     *     '$this' . &quot;\n&quot; .
+     *     '    -&gt;exception(function () {' . &quot;\n&quot; .
+     *     '        \assert(\true);' . &quot;\n&quot; .
+     *     '    })' . &quot;\n&quot; .
+     *     '        -&gt;isInstanceOf(\E::class);';
+     *
+     * assert($output === $handler-&gt;compileToTestCaseBody($codeBlockType, $codeBlockContent));
+     * ```
+     */
+    public function compileToTestCaseBody(string $codeBlockType, string $codeBlockContent): string
+    {
+        $codeBlockContent = $this-&gt;unfoldCode($codeBlockContent);
+
+        if (0 !== preg_match('/\bignore\b/', $codeBlockType)) {
+            return
+                sprintf(
+                    '$this-&gt;skip(\'Skipped because ' .
+                    'the code block type contains `ignore`: `%s`.\');',
+                    $codeBlockType
+                );
+        }
+
+        if (0 !== preg_match('/\bmust_throw(?:\(([^\)]+)\)|\b)/', $codeBlockType, $matches)) {
+            return
+                sprintf(
+                    '$this' . &quot;\n&quot; .
+                    '    -&gt;exception(function () {' . &quot;\n&quot; .
+                    '        %s' . &quot;\n&quot; .
+                    '    })' . &quot;\n&quot; .
+                    '        -&gt;isInstanceOf(\\%s::class);',
+                    preg_replace(
+                        '/^\h+$/m',
+                        '',
+                        str_replace(&quot;\n&quot;, &quot;\n&quot; . '    ', $codeBlockContent)
+                    ),
+                    isset($matches[1]) ? $matches[1] : 'Exception'
+                );
+        }
+
+        return
+            sprintf(
+                '$this' . &quot;\n&quot; .
+                '    -&gt;assert(function () {' . &quot;\n&quot; .
+                '        %s' . &quot;\n&quot; .
+                '    });',
+                preg_replace(
+                    '/^\h+$/m',
+                    '',
+                    str_replace(&quot;\n&quot;, &quot;\n&quot; . '        ', $codeBlockContent)
+                )
+            );
+    }
+
+    /**
+     * Prepare the code to be embeddable inside a test case.
+     */
+    protected function unfoldCode(string $phpCode): string
+    {
+        $ast = Parser::getPhpParser()-&gt;parse('&lt;?php ' . $phpCode);
+        $ast = self::getPhpTraverser()-&gt;traverse($ast);
+
+        return Parser::getPhpPrettyPrinter()-&gt;prettyPrint($ast);
+    }
+
+    /**
+     * Get the statically allocated traverser instance.
+     */
+    protected static function getPhpTraverser(): NodeTraverser
+    {
+        if (null === self::$_phpTraverser) {
+            self::$_phpTraverser = new NodeTraverser();
+            self::$_phpTraverser-&gt;addVisitor(new NodeVisitor\NameResolver());
+            self::$_phpTraverser-&gt;addVisitor(new IntoPHPTestCaseBody());
+        }
+
+        return self::$_phpTraverser;
+    }
+}
+</code></pre>
+</article>
+        </main>
+
+        <script src="./javascript/prism.js"></script>
+        <script src="./javascript/prism-hooks.js"></script>
+        <script src="./javascript/search.elm.js" defer></script>
+        <script src="./javascript/search-index.js" defer></script>
+        <script src="./javascript/search-metadata.js" defer></script>
+        <script src="./javascript/application.js" defer></script>
+    </body>
+</html>

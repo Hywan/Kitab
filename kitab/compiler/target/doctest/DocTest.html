@@ -9,21 +9,32 @@
         <meta http-equiv="content-type" content="text/css; charset=utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-        <meta name="generator" content="Kitab (https://hoa-project.net/)" />
+        <link rel="preload" href="./css/main.css" as="style" />
+        <link rel="preload" href="./javascript/prism.js" as="script" />
+        <link rel="preload" href="./javascript/prism-hooks.js" as="script" />
+        <link rel="preload" href="./javascript/search.elm.js" as="script" />
+        <link rel="preload" href="./javascript/search-index.js" as="script" />
+        <link rel="preload" href="./javascript/search-metadata.js" as="script" />
+        <link rel="preload" href="./javascript/application.js" as="script" />
 
+        <link rel="stylesheet" href="./css/main.css" media="all" />
+        <link rel="stylesheet" href="./css/prism.css" media="all" />
+
+        <link rel="icon" type="image/png" href="./resource/logo_32x32.png" sizes="32x32" />
+        <link rel="icon" type="image/png" href="./resource/logo_192x192.png" sizes="192x192" />
+
+        <meta name="generator" content="Kitab (https://hoa-project.net/)" />
         <meta name="description" content="Kitab\Compiler\Target\DocTest\DocTest from Kitab">
 
         <meta property="og:title" content="Kitab\Compiler\Target\DocTest\DocTest from Kitab" />
         <meta property="og:type" content="website" />
-        <meta proprery="og:image" content="https://placehold.it/150x150" />
+        <meta proprery="og:image" content="https://raw.githubusercontent.com/hoaproject/Kitab/master/resource/logo.svg?sanitize=true" />
 
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:creator" content="@hoaproject" />
         <meta name="twitter:text:title" content="Kitab\Compiler\Target\DocTest\DocTest from Kitab" />
-        <meta name="twitter:img:src" content="https://placehold.it/150x150" />
-
-        <link rel="stylesheet" href="./css/main.css" media="all" />
-        <link rel="stylesheet" href="./css/prism.css" media="all" />
+        <meta name="twitter:image:src" content="https://raw.githubusercontent.com/hoaproject/Kitab/master/resource/logo.svg?sanitize=true" />
+        <meta name="twitter:image:alt" content="Kitab" />
     </head>
     <body>
         <div id="search" role="search">
@@ -36,7 +47,7 @@
             <aside>
     <header>
         <a href="./">
-            <img src="https://placehold.it/150x150" alt="Home" />
+            <img src="https://raw.githubusercontent.com/hoaproject/Kitab/master/resource/logo.svg?sanitize=true" alt="Home" />
         </a>
     </header>
 
@@ -46,8 +57,8 @@
                     <h2>Classes</h2>
 
             <ul class="list--flat">
+                                    <li><a href="./kitab/compiler/target/doctest/Configuration.html"><code>Configuration</code></a></li>
                                     <li><a href="./kitab/compiler/target/doctest/DocTest.html"><code>DocTest</code></a></li>
-                                    <li><a href="./kitab/compiler/target/doctest/IntoTestCaseBody.html"><code>IntoTestCaseBody</code></a></li>
                             </ul>
         
         
@@ -59,21 +70,21 @@
     <h1>
     Class <code>Kitab\Compiler\Target\DocTest\DocTest</code>
     <aside>
-        <a href="./kitab/compiler/target/doctest/DocTest.source.html#L.54-316" title="View source">[src]</a>
+        <a href="./kitab/compiler/target/doctest/DocTest.source.html#L.51-295" title="View source">[src]</a>
     </aside>
 </h1>
 
 <pre><code class="language-php">class DocTest
 {
+    public function addCodeBlockHandler(Kitab\Compiler\Target\DocTest\CodeBlockHandler\Definition $codeBlockHandler): self;
+    public function removeCodeBlockHandler(Kitab\Compiler\Target\DocTest\CodeBlockHandler\Definition $codeBlockHandler): self;
     public function compile(Kitab\Compiler\IntermediateRepresentation\File $file);
     protected function compileEntity(Kitab\Compiler\IntermediateRepresentation\Entity $entity): string;
     public function assemble(array $symbols);
     protected function getCodeBlocks(Kitab\Compiler\IntermediateRepresentation\Documentation $documentation): Generator;
     protected function parseCodeBlocks(League\CommonMark\Node\NodeWalker $walker): Generator;
-    protected function unfoldCode(string $phpCode): string;
-    protected function compileToTestCase(string $testCaseName, array $codeBlock): string;
+    protected function compileToTestCases(string $testCaseName, array $codeBlock): Generator;
     protected function getMarkdownParser();
-    protected static function getPhpTraverser(): PhpParser\NodeTraverser;
     protected function computeTestSuiteShortName(string $shortName, string $longName): string;
 }</code></pre>
 
@@ -99,11 +110,11 @@
             <dd>
                 <section></section>
             </dd>
-                    <dt aria-label="_phpTraverser"><code class="language-php">protected static $_phpTraverser = null;</code></dt>
+                    <dt aria-label="_generatedTestSuites"><code class="language-php">protected $_generatedTestSuites = [];</code></dt>
             <dd>
                 <section></section>
             </dd>
-                    <dt aria-label="_generatedTestSuites"><code class="language-php">protected $_generatedTestSuites = [];</code></dt>
+                    <dt aria-label="_codeBlockHandlers"><code class="language-php">protected $_codeBlockHandlers = [];</code></dt>
             <dd>
                 <section></section>
             </dd>
@@ -112,72 +123,72 @@
     <h2 id="methods">Methods</h2>
 
     <dl class="entity__children">
+                    <dt aria-label="addCodeBlockHandler">
+                <code class="language-php">public function addCodeBlockHandler(Kitab\Compiler\Target\DocTest\CodeBlockHandler\Definition $codeBlockHandler): self</code>
+                <aside><a href="./kitab/compiler/target/doctest/DocTest.source.html#L.60-65" title="View source of the `addCodeBlockHandler` method">[src]</a></aside>
+            </dt>
+            <dd>
+                <section></section>
+            </dd>
+                    <dt aria-label="removeCodeBlockHandler">
+                <code class="language-php">public function removeCodeBlockHandler(Kitab\Compiler\Target\DocTest\CodeBlockHandler\Definition $codeBlockHandler): self</code>
+                <aside><a href="./kitab/compiler/target/doctest/DocTest.source.html#L.67-72" title="View source of the `removeCodeBlockHandler` method">[src]</a></aside>
+            </dt>
+            <dd>
+                <section></section>
+            </dd>
                     <dt aria-label="compile">
                 <code class="language-php">public function compile(Kitab\Compiler\IntermediateRepresentation\File $file)</code>
-                <aside><a href="./kitab/compiler/target/doctest/DocTest.source.html#L.63-97" title="View source of the `compile` method">[src]</a></aside>
+                <aside><a href="./kitab/compiler/target/doctest/DocTest.source.html#L.74-109" title="View source of the `compile` method">[src]</a></aside>
             </dt>
             <dd>
                 <section></section>
             </dd>
                     <dt aria-label="compileEntity">
                 <code class="language-php">protected function compileEntity(Kitab\Compiler\IntermediateRepresentation\Entity $entity): string</code>
-                <aside><a href="./kitab/compiler/target/doctest/DocTest.source.html#L.99-141" title="View source of the `compileEntity` method">[src]</a></aside>
+                <aside><a href="./kitab/compiler/target/doctest/DocTest.source.html#L.111-163" title="View source of the `compileEntity` method">[src]</a></aside>
             </dt>
             <dd>
                 <section></section>
             </dd>
                     <dt aria-label="assemble">
                 <code class="language-php">public function assemble(array $symbols)</code>
-                <aside><a href="./kitab/compiler/target/doctest/DocTest.source.html#L.143-146" title="View source of the `assemble` method">[src]</a></aside>
+                <aside><a href="./kitab/compiler/target/doctest/DocTest.source.html#L.165-168" title="View source of the `assemble` method">[src]</a></aside>
             </dt>
             <dd>
                 <section></section>
             </dd>
                     <dt aria-label="getCodeBlocks">
                 <code class="language-php">protected function getCodeBlocks(Kitab\Compiler\IntermediateRepresentation\Documentation $documentation): Generator</code>
-                <aside><a href="./kitab/compiler/target/doctest/DocTest.source.html#L.148-158" title="View source of the `getCodeBlocks` method">[src]</a></aside>
+                <aside><a href="./kitab/compiler/target/doctest/DocTest.source.html#L.170-180" title="View source of the `getCodeBlocks` method">[src]</a></aside>
             </dt>
             <dd>
                 <section></section>
             </dd>
                     <dt aria-label="parseCodeBlocks">
                 <code class="language-php">protected function parseCodeBlocks(League\CommonMark\Node\NodeWalker $walker): Generator</code>
-                <aside><a href="./kitab/compiler/target/doctest/DocTest.source.html#L.160-216" title="View source of the `parseCodeBlocks` method">[src]</a></aside>
+                <aside><a href="./kitab/compiler/target/doctest/DocTest.source.html#L.182-226" title="View source of the `parseCodeBlocks` method">[src]</a></aside>
             </dt>
             <dd>
                 <section></section>
             </dd>
-                    <dt aria-label="unfoldCode">
-                <code class="language-php">protected function unfoldCode(string $phpCode): string</code>
-                <aside><a href="./kitab/compiler/target/doctest/DocTest.source.html#L.218-224" title="View source of the `unfoldCode` method">[src]</a></aside>
-            </dt>
-            <dd>
-                <section></section>
-            </dd>
-                    <dt aria-label="compileToTestCase">
-                <code class="language-php">protected function compileToTestCase(string $testCaseName, array $codeBlock): string</code>
-                <aside><a href="./kitab/compiler/target/doctest/DocTest.source.html#L.226-282" title="View source of the `compileToTestCase` method">[src]</a></aside>
+                    <dt aria-label="compileToTestCases">
+                <code class="language-php">protected function compileToTestCases(string $testCaseName, array $codeBlock): Generator</code>
+                <aside><a href="./kitab/compiler/target/doctest/DocTest.source.html#L.228-272" title="View source of the `compileToTestCases` method">[src]</a></aside>
             </dt>
             <dd>
                 <section></section>
             </dd>
                     <dt aria-label="getMarkdownParser">
                 <code class="language-php">protected function getMarkdownParser()</code>
-                <aside><a href="./kitab/compiler/target/doctest/DocTest.source.html#L.284-293" title="View source of the `getMarkdownParser` method">[src]</a></aside>
-            </dt>
-            <dd>
-                <section></section>
-            </dd>
-                    <dt aria-label="getPhpTraverser">
-                <code class="language-php">protected static function getPhpTraverser(): PhpParser\NodeTraverser</code>
-                <aside><a href="./kitab/compiler/target/doctest/DocTest.source.html#L.295-304" title="View source of the `getPhpTraverser` method">[src]</a></aside>
+                <aside><a href="./kitab/compiler/target/doctest/DocTest.source.html#L.274-283" title="View source of the `getMarkdownParser` method">[src]</a></aside>
             </dt>
             <dd>
                 <section></section>
             </dd>
                     <dt aria-label="computeTestSuiteShortName">
                 <code class="language-php">protected function computeTestSuiteShortName(string $shortName, string $longName): string</code>
-                <aside><a href="./kitab/compiler/target/doctest/DocTest.source.html#L.306-315" title="View source of the `computeTestSuiteShortName` method">[src]</a></aside>
+                <aside><a href="./kitab/compiler/target/doctest/DocTest.source.html#L.285-294" title="View source of the `computeTestSuiteShortName` method">[src]</a></aside>
             </dt>
             <dd>
                 <section></section>
@@ -193,11 +204,11 @@
 </article>
         </main>
 
-        <script type="text/javascript" src="./javascript/search.elm.js"></script>
-        <script type="text/javascript" src="./javascript/search-index.js"></script>
-        <script type="text/javascript" src="./javascript/search-metadata.js"></script>
-        <script type="text/javascript" src="./javascript/application.js"></script>
-        <script type="text/javascript" src="./javascript/prism.js"></script>
-        <script type="text/javascript" src="./javascript/prism-hooks.js" async defer></script>
+        <script src="./javascript/prism.js"></script>
+        <script src="./javascript/prism-hooks.js"></script>
+        <script src="./javascript/search.elm.js" defer></script>
+        <script src="./javascript/search-index.js" defer></script>
+        <script src="./javascript/search-metadata.js" defer></script>
+        <script src="./javascript/application.js" defer></script>
     </body>
 </html>

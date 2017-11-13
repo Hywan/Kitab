@@ -9,27 +9,32 @@
         <meta http-equiv="content-type" content="text/css; charset=utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-        <meta name="generator" content="Kitab (https://hoa-project.net/)" />
+        <link rel="preload" href="./css/main.css" as="style" />
+        <link rel="preload" href="./javascript/prism.js" as="script" />
+        <link rel="preload" href="./javascript/prism-hooks.js" as="script" />
+        <link rel="preload" href="./javascript/search.elm.js" as="script" />
+        <link rel="preload" href="./javascript/search-index.js" as="script" />
+        <link rel="preload" href="./javascript/search-metadata.js" as="script" />
+        <link rel="preload" href="./javascript/application.js" as="script" />
 
+        <link rel="stylesheet" href="./css/main.css" media="all" />
+        <link rel="stylesheet" href="./css/prism.css" media="all" />
+
+        <link rel="icon" type="image/png" href="./resource/logo_32x32.png" sizes="32x32" />
+        <link rel="icon" type="image/png" href="./resource/logo_192x192.png" sizes="192x192" />
+
+        <meta name="generator" content="Kitab (https://hoa-project.net/)" />
         <meta name="description" content="Index of Kitab from Kitab">
 
         <meta property="og:title" content="Index of Kitab from Kitab" />
         <meta property="og:type" content="website" />
-        <meta proprery="og:image" content="https://placehold.it/150x150" />
+        <meta proprery="og:image" content="https://raw.githubusercontent.com/hoaproject/Kitab/master/resource/logo.svg?sanitize=true" />
 
-        <!--
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:creator" content="@hoaproject" />
-        -->
-
-        <meta name="twitter:site" content="@mnt_io" />
         <meta name="twitter:text:title" content="Index of Kitab from Kitab" />
-        <meta name="twitter:image:src" content="https://static.hoa-project.net/Image/Hoa.png" />
-        <meta name="twitter:card" content="summary" />
-        <meta name="twitter:creator" content="@mnt_io" />
-
-        <link rel="stylesheet" href="./css/main.css" media="all" />
-        <link rel="stylesheet" href="./css/prism.css" media="all" />
+        <meta name="twitter:image:src" content="https://raw.githubusercontent.com/hoaproject/Kitab/master/resource/logo.svg?sanitize=true" />
+        <meta name="twitter:image:alt" content="Kitab" />
     </head>
     <body>
         <div id="search" role="search">
@@ -42,7 +47,7 @@
             <aside>
     <header>
         <a href="./">
-            <img src="https://placehold.it/150x150" alt="Home" />
+            <img src="https://raw.githubusercontent.com/hoaproject/Kitab/master/resource/logo.svg?sanitize=true" alt="Home" />
         </a>
     </header>
 
@@ -76,7 +81,6 @@
 <p align="center">
   Made with ❤️ by <a href="https://hoa-project.net"><img src="https://static.hoa-project.net/Image/Hoa.svg" height="18" alt="Hoa" /></a>
 </p>
-<h1>Kitab</h1>
 <p>The goal of Kitab is twofold, <strong>render</strong> and <strong>test</strong> the
 documentation:</p>
 <ol>
@@ -92,7 +96,7 @@ are run directly to ensure the examples are still up-to-date and
 working.</p>
 </li>
 </ol>
-<h2>Static documentation</h2>
+<h1>Static documentation</h1>
 <p>Kitab is able to compile the documentation inside your code into
 static HTML files. A carefully crafted design is provided to ensure a
 great look for your documentation. This is possible to customize the
@@ -114,7 +118,7 @@ mapping definitions. This is useful to map <code>README.md</code> files to
 namespace directories, more below. The <code>--open</code> option opens the
 documentation in your default browser as soon as it is generated
 successfully.</p>
-<h2>DocTest</h2>
+<h1>DocTest</h1>
 <p>Documentation test suites, aka DocTest, are generated based on the
 examples present in your documentation. Examples are compiled into
 test suites and executed on-the-fly. A cache is generated to avoid
@@ -260,11 +264,11 @@ function panic(string $message): RuntimeException
     </article>
         </main>
 
-        <script type="text/javascript" src="./javascript/search.elm.js"></script>
-        <script type="text/javascript" src="./javascript/search-index.js"></script>
-        <script type="text/javascript" src="./javascript/search-metadata.js"></script>
-        <script type="text/javascript" src="./javascript/application.js"></script>
-        <script type="text/javascript" src="./javascript/prism.js"></script>
-        <script type="text/javascript" src="./javascript/prism-hooks.js" async defer></script>
+        <script src="./javascript/prism.js"></script>
+        <script src="./javascript/prism-hooks.js"></script>
+        <script src="./javascript/search.elm.js" defer></script>
+        <script src="./javascript/search-index.js" defer></script>
+        <script src="./javascript/search-metadata.js" defer></script>
+        <script src="./javascript/application.js" defer></script>
     </body>
 </html>

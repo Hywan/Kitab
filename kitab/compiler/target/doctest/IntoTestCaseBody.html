@@ -20,10 +20,22 @@
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:creator" content="@hoaproject" />
         <meta name="twitter:text:title" content="Kitab\Compiler\Target\DocTest\IntoTestCaseBody from Kitab" />
-        <meta name="twitter:img:src" content="https://placehold.it/150x150" />
+        <meta name="twitter:image:src" content="https://placehold.it/150x150" />
+        <meta name="twitter:image:alt" content="Kitab" />
+
+        <link rel="preload" href="./css/main.css" as="style" />
+        <link rel="preload" href="./javascript/prism.js" as="script" />
+        <link rel="preload" href="./javascript/prism-hooks.js" as="script" />
+        <link rel="preload" href="./javascript/search.elm.js" as="script" />
+        <link rel="preload" href="./javascript/search-index.js" as="script" />
+        <link rel="preload" href="./javascript/search-metadata.js" as="script" />
+        <link rel="preload" href="./javascript/application.js" as="script" />
 
         <link rel="stylesheet" href="./css/main.css" media="all" />
         <link rel="stylesheet" href="./css/prism.css" media="all" />
+
+        <link rel="icon" type="image/png" href="./resource/logo_32x32.png" sizes="32x32" />
+        <link rel="icon" type="image/png" href="./resource/logo_192x192.png" sizes="192x192" />
     </head>
     <body>
         <div id="search" role="search">
@@ -107,11 +119,11 @@ assert('new \A\B\C();' === $testCaseCandidate);
 </article>
         </main>
 
-        <script type="text/javascript" src="./javascript/search.elm.js"></script>
-        <script type="text/javascript" src="./javascript/search-index.js"></script>
-        <script type="text/javascript" src="./javascript/search-metadata.js"></script>
-        <script type="text/javascript" src="./javascript/application.js"></script>
-        <script type="text/javascript" src="./javascript/prism.js"></script>
-        <script type="text/javascript" src="./javascript/prism-hooks.js" async defer></script>
+        <script src="./javascript/prism.js"></script>
+        <script src="./javascript/prism-hooks.js"></script>
+        <script src="./javascript/search.elm.js" defer></script>
+        <script src="./javascript/search-index.js" defer></script>
+        <script src="./javascript/search-metadata.js" defer></script>
+        <script src="./javascript/application.js" defer></script>
     </body>
 </html>

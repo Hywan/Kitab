@@ -9,21 +9,32 @@
         <meta http-equiv="content-type" content="text/css; charset=utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-        <meta name="generator" content="Kitab (https://hoa-project.net/)" />
+        <link rel="preload" href="./css/main.css" as="style" />
+        <link rel="preload" href="./javascript/prism.js" as="script" />
+        <link rel="preload" href="./javascript/prism-hooks.js" as="script" />
+        <link rel="preload" href="./javascript/search.elm.js" as="script" />
+        <link rel="preload" href="./javascript/search-index.js" as="script" />
+        <link rel="preload" href="./javascript/search-metadata.js" as="script" />
+        <link rel="preload" href="./javascript/application.js" as="script" />
 
+        <link rel="stylesheet" href="./css/main.css" media="all" />
+        <link rel="stylesheet" href="./css/prism.css" media="all" />
+
+        <link rel="icon" type="image/png" href="./resource/logo_32x32.png" sizes="32x32" />
+        <link rel="icon" type="image/png" href="./resource/logo_192x192.png" sizes="192x192" />
+
+        <meta name="generator" content="Kitab (https://hoa-project.net/)" />
         <meta name="description" content="Index of Kitab\Compiler from Kitab">
 
         <meta property="og:title" content="Index of Kitab\Compiler from Kitab" />
         <meta property="og:type" content="website" />
-        <meta proprery="og:image" content="https://placehold.it/150x150" />
+        <meta proprery="og:image" content="https://raw.githubusercontent.com/hoaproject/Kitab/master/resource/logo.svg?sanitize=true" />
 
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:creator" content="@hoaproject" />
         <meta name="twitter:text:title" content="Index of Kitab\Compiler from Kitab" />
-        <meta name="twitter:img:src" content="https://placehold.it/150x150" />
-
-        <link rel="stylesheet" href="./css/main.css" media="all" />
-        <link rel="stylesheet" href="./css/prism.css" media="all" />
+        <meta name="twitter:image:src" content="https://raw.githubusercontent.com/hoaproject/Kitab/master/resource/logo.svg?sanitize=true" />
+        <meta name="twitter:image:alt" content="Kitab" />
     </head>
     <body>
         <div id="search" role="search">
@@ -36,7 +47,7 @@
             <aside>
     <header>
         <a href="./">
-            <img src="https://placehold.it/150x150" alt="Home" />
+            <img src="https://raw.githubusercontent.com/hoaproject/Kitab/master/resource/logo.svg?sanitize=true" alt="Home" />
         </a>
     </header>
 
@@ -66,7 +77,7 @@
 <h1>Stream compiler</h1>
 <p>In order to fast handle large projects to document, Kitab compiler has
 been designed to work as a <em>stream</em>. Objects in memory are freed as
-soon as possible, they are not accumulate. The same memory space can
+soon as possible, they are not accumulated. The same memory space can
 be reused for each file being compiled. The algorithm works as
 follows:</p>
 <ol>
@@ -96,7 +107,9 @@ targets, decoupled from the PHP-Parser AST API.</p>
 <p>The root of IR is the <a href="./kitab/compiler/intermediaterepresentation/Into.html"><code>Kitab\Compiler\IntermediateRepresentation\Into</code></a>
 class. It acts as a visitor to traverse the AST.</p>
 <h1>Targets</h1>
-<p>Kitab can compile to many targets. So far, it only has the HTML target.</p>
+<p>Kitab can compile to many targets. So far, it has two targets: HTML
+and DocTest, respectively to render the documentation into HTML, and
+to test it.</p>
 <p>All targets must implement the <a href="./kitab/compiler/target/Target.html"><code>Kitab\Compiler\Target\Target</code></a>
 interface. It requires few basic methods. It's up to the implementer
 to ensure the correct behavior of the target.</p>
@@ -127,11 +140,11 @@ to ensure the correct behavior of the target.</p>
     </article>
         </main>
 
-        <script type="text/javascript" src="./javascript/search.elm.js"></script>
-        <script type="text/javascript" src="./javascript/search-index.js"></script>
-        <script type="text/javascript" src="./javascript/search-metadata.js"></script>
-        <script type="text/javascript" src="./javascript/application.js"></script>
-        <script type="text/javascript" src="./javascript/prism.js"></script>
-        <script type="text/javascript" src="./javascript/prism-hooks.js" async defer></script>
+        <script src="./javascript/prism.js"></script>
+        <script src="./javascript/prism-hooks.js"></script>
+        <script src="./javascript/search.elm.js" defer></script>
+        <script src="./javascript/search-index.js" defer></script>
+        <script src="./javascript/search-metadata.js" defer></script>
+        <script src="./javascript/application.js" defer></script>
     </body>
 </html>

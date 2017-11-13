@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+
+<html lang="en" prefix="og: http://ogp.me/ns#">
+    <head>
+        <base href="./../../../../" />
+        <title>Kitab\Compiler\Target\Html\Configuration from Kitab</title>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <meta http-equiv="content-type" content="text/javascript; charset=utf-8" />
+        <meta http-equiv="content-type" content="text/css; charset=utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <link rel="preload" href="./css/main.css" as="style" />
+        <link rel="preload" href="./javascript/prism.js" as="script" />
+        <link rel="preload" href="./javascript/prism-hooks.js" as="script" />
+        <link rel="preload" href="./javascript/search.elm.js" as="script" />
+        <link rel="preload" href="./javascript/search-index.js" as="script" />
+        <link rel="preload" href="./javascript/search-metadata.js" as="script" />
+        <link rel="preload" href="./javascript/application.js" as="script" />
+
+        <link rel="stylesheet" href="./css/main.css" media="all" />
+        <link rel="stylesheet" href="./css/prism.css" media="all" />
+
+        <link rel="icon" type="image/png" href="./resource/logo_32x32.png" sizes="32x32" />
+        <link rel="icon" type="image/png" href="./resource/logo_192x192.png" sizes="192x192" />
+
+        <meta name="generator" content="Kitab (https://hoa-project.net/)" />
+        <meta name="description" content="Kitab\Compiler\Target\Html\Configuration from Kitab">
+
+        <meta property="og:title" content="Kitab\Compiler\Target\Html\Configuration from Kitab" />
+        <meta property="og:type" content="website" />
+        <meta proprery="og:image" content="https://raw.githubusercontent.com/hoaproject/Kitab/master/resource/logo.svg?sanitize=true" />
+
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:creator" content="@hoaproject" />
+        <meta name="twitter:text:title" content="Kitab\Compiler\Target\Html\Configuration from Kitab" />
+        <meta name="twitter:image:src" content="https://raw.githubusercontent.com/hoaproject/Kitab/master/resource/logo.svg?sanitize=true" />
+        <meta name="twitter:image:alt" content="Kitab" />
+    </head>
+    <body>
+        <div id="search" role="search">
+            <div>
+                <input type="search" placeholder="Initializing search…" disabled />
+            </div>
+        </div>
+
+        <main>
+            <aside>
+    <header>
+        <a href="./">
+            <img src="https://raw.githubusercontent.com/hoaproject/Kitab/master/resource/logo.svg?sanitize=true" alt="Home" />
+        </a>
+    </header>
+
+    <nav>
+        <h1><code><a href="./kitab/index.html">Kitab</a>\<wbr /><a href="./kitab/compiler/index.html">Compiler</a>\<wbr /><a href="./kitab/compiler/target/index.html">Target</a>\<wbr /><a href="./kitab/compiler/target/html/index.html">Html</a></code></h1>
+
+                    <h2>Classes</h2>
+
+            <ul class="list--flat">
+                                    <li><a href="./kitab/compiler/target/html/Configuration.html"><code>Configuration</code></a></li>
+                                    <li><a href="./kitab/compiler/target/html/Html.html"><code>Html</code></a></li>
+                                    <li><a href="./kitab/compiler/target/html/Router.html"><code>Router</code></a></li>
+                                    <li><a href="./kitab/compiler/target/html/Search.html"><code>Search</code></a></li>
+                                    <li><a href="./kitab/compiler/target/html/Templater.html"><code>Templater</code></a></li>
+                            </ul>
+        
+        
+        
+            </nav>
+</aside>
+
+<article>
+    <h1>
+    Class <code>Kitab\Compiler\Target\Html\Configuration</code>
+    <aside>
+        <a href="./kitab/compiler/target/html/Configuration.source.html#L.59-94" title="View source">[src]</a>
+    </aside>
+</h1>
+
+<pre><code class="language-php">class Configuration extends Kitab\Configuration
+{
+}</code></pre>
+
+<section class="entity__description"><p>Configuration structure for the HTML target.</p>
+<p>This structure contains all the configuration items used by the HTML target
+of Kitab. It extends the default Kitab configuration structure.</p>
+<h1>Examples</h1>
+<pre><code class="language-php">$configuration              = new Kitab\Compiler\Target\Html\Configuration();
+$configuration-&gt;projectName = 'Kitab';
+
+assert('Kitab' === $configuration-&gt;projectName);
+</code></pre>
+</section>
+
+
+    <h2 id="attributes">Attributes</h2>
+
+    <dl class="entity__children">
+                    <dt aria-label="defaultNamespace"><code class="language-php">public $defaultNamespace = null;</code></dt>
+            <dd>
+                <section><p>The default namespace of the project currently documented.</p>
+<p>A project can contain several namespaces, either because it hosts many,
+or because of the dependencies. The default namespace is the entry
+point of the documentation. If a default namespace is provided, when
+the user will open the documentation, she will be automatically
+redirected to the default namespace.</p>
+</section>
+            </dd>
+                    <dt aria-label="logoURL"><code class="language-php">public $logoURL = 'https://placehold.it/150x150';</code></dt>
+            <dd>
+                <section><p>URL to the logo of the documentation.</p>
+<p>Each page contains a logo, representing a link to the “home”. It is
+possible to customise the logo by using this configuration item. By
+default, a placeholder is used.</p>
+</section>
+            </dd>
+                    <dt aria-label="projectName"><code class="language-php">public $projectName = '(unknown)';</code></dt>
+            <dd>
+                <section><p>Project name.</p>
+<p>This configuration item represents the name of the project being documented.</p>
+</section>
+            </dd>
+                    <dt aria-label="composerFile"><code class="language-php">public $composerFile = null;</code></dt>
+            <dd>
+                <section><p>Composer file.</p>
+<p>Use a specific Composer file to get PSR-4 mappings.</p>
+</section>
+            </dd>
+            </dl>
+
+
+</article>
+        </main>
+
+        <script src="./javascript/prism.js"></script>
+        <script src="./javascript/prism-hooks.js"></script>
+        <script src="./javascript/search.elm.js" defer></script>
+        <script src="./javascript/search-index.js" defer></script>
+        <script src="./javascript/search-metadata.js" defer></script>
+        <script src="./javascript/application.js" defer></script>
+    </body>
+</html>

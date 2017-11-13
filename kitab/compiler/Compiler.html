@@ -9,21 +9,32 @@
         <meta http-equiv="content-type" content="text/css; charset=utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-        <meta name="generator" content="Kitab (https://hoa-project.net/)" />
+        <link rel="preload" href="./css/main.css" as="style" />
+        <link rel="preload" href="./javascript/prism.js" as="script" />
+        <link rel="preload" href="./javascript/prism-hooks.js" as="script" />
+        <link rel="preload" href="./javascript/search.elm.js" as="script" />
+        <link rel="preload" href="./javascript/search-index.js" as="script" />
+        <link rel="preload" href="./javascript/search-metadata.js" as="script" />
+        <link rel="preload" href="./javascript/application.js" as="script" />
 
+        <link rel="stylesheet" href="./css/main.css" media="all" />
+        <link rel="stylesheet" href="./css/prism.css" media="all" />
+
+        <link rel="icon" type="image/png" href="./resource/logo_32x32.png" sizes="32x32" />
+        <link rel="icon" type="image/png" href="./resource/logo_192x192.png" sizes="192x192" />
+
+        <meta name="generator" content="Kitab (https://hoa-project.net/)" />
         <meta name="description" content="Kitab\Compiler\Compiler from Kitab">
 
         <meta property="og:title" content="Kitab\Compiler\Compiler from Kitab" />
         <meta property="og:type" content="website" />
-        <meta proprery="og:image" content="https://placehold.it/150x150" />
+        <meta proprery="og:image" content="https://raw.githubusercontent.com/hoaproject/Kitab/master/resource/logo.svg?sanitize=true" />
 
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:creator" content="@hoaproject" />
         <meta name="twitter:text:title" content="Kitab\Compiler\Compiler from Kitab" />
-        <meta name="twitter:img:src" content="https://placehold.it/150x150" />
-
-        <link rel="stylesheet" href="./css/main.css" media="all" />
-        <link rel="stylesheet" href="./css/prism.css" media="all" />
+        <meta name="twitter:image:src" content="https://raw.githubusercontent.com/hoaproject/Kitab/master/resource/logo.svg?sanitize=true" />
+        <meta name="twitter:image:alt" content="Kitab" />
     </head>
     <body>
         <div id="search" role="search">
@@ -36,7 +47,7 @@
             <aside>
     <header>
         <a href="./">
-            <img src="https://placehold.it/150x150" alt="Home" />
+            <img src="https://raw.githubusercontent.com/hoaproject/Kitab/master/resource/logo.svg?sanitize=true" alt="Home" />
         </a>
     </header>
 
@@ -59,13 +70,13 @@
     <h1>
     Class <code>Kitab\Compiler\Compiler</code>
     <aside>
-        <a href="./kitab/compiler/Compiler.source.html#L.56-183" title="View source">[src]</a>
+        <a href="./kitab/compiler/Compiler.source.html#L.55-169" title="View source">[src]</a>
     </aside>
 </h1>
 
 <pre><code class="language-php">class Compiler
 {
-    public function __construct(Kitab\Configuration $configuration);
+    public function __construct();
     public function compile(Kitab\Finder $finder, Kitab\Compiler\Target\Target $target);
     public function getParser(): Kitab\Compiler\Parser;
     protected function link(Kitab\Compiler\IntermediateRepresentation\File $file, array &$symbols);
@@ -84,12 +95,6 @@ objects.</p>
     <h2 id="attributes">Attributes</h2>
 
     <dl class="entity__children">
-                    <dt aria-label="_configuration"><code class="language-php">protected $_configuration = null;</code></dt>
-            <dd>
-                <section><p>Configuration of the Kitab project, represented by the
-<a href="./kitab/Configuration.html"><code>Kitab\Configuration</code></a> class.</p>
-</section>
-            </dd>
                     <dt aria-label="_parser"><code class="language-php">protected static $_parser = null;</code></dt>
             <dd>
                 <section><p>The parsed used to parse PHP files.</p>
@@ -102,18 +107,17 @@ objects.</p>
 
     <dl class="entity__children">
                     <dt aria-label="__construct">
-                <code class="language-php">public function __construct(Kitab\Configuration $configuration)</code>
-                <aside><a href="./kitab/compiler/Compiler.source.html#L.76-89" title="View source of the `__construct` method">[src]</a></aside>
+                <code class="language-php">public function __construct()</code>
+                <aside><a href="./kitab/compiler/Compiler.source.html#L.68-75" title="View source of the `__construct` method">[src]</a></aside>
             </dt>
             <dd>
                 <section><p>When constructing the compiler, a new instance of the
-<a href="./kitab/compiler/Parser.html"><code>Kitab\Compiler\Parser</code></a> parser is created and stored statically. If no
-configuration is provided, a default configuration is allocated.</p>
+<a href="./kitab/compiler/Parser.html"><code>Kitab\Compiler\Parser</code></a> parser is created and stored statically.</p>
 </section>
             </dd>
                     <dt aria-label="compile">
                 <code class="language-php">public function compile(Kitab\Finder $finder, Kitab\Compiler\Target\Target $target)</code>
-                <aside><a href="./kitab/compiler/Compiler.source.html#L.107-122" title="View source of the `compile` method">[src]</a></aside>
+                <aside><a href="./kitab/compiler/Compiler.source.html#L.93-108" title="View source of the `compile` method">[src]</a></aside>
             </dt>
             <dd>
                 <section><p>Compile all files provided by the finder into the specified target.
@@ -131,7 +135,7 @@ $compiler-&gt;compile($finder, $target);
             </dd>
                     <dt aria-label="getParser">
                 <code class="language-php">public function getParser(): Kitab\Compiler\Parser</code>
-                <aside><a href="./kitab/compiler/Compiler.source.html#L.135-138" title="View source of the `getParser` method">[src]</a></aside>
+                <aside><a href="./kitab/compiler/Compiler.source.html#L.121-124" title="View source of the `getParser` method">[src]</a></aside>
             </dt>
             <dd>
                 <section><p>Return the parser stored in the cache.</p>
@@ -144,7 +148,7 @@ assert($compiler-&gt;getParser() instanceof Kitab\Compiler\Parser);
             </dd>
                     <dt aria-label="link">
                 <code class="language-php">protected function link(Kitab\Compiler\IntermediateRepresentation\File $file, array &$symbols)</code>
-                <aside><a href="./kitab/compiler/Compiler.source.html#L.152-182" title="View source of the `link` method">[src]</a></aside>
+                <aside><a href="./kitab/compiler/Compiler.source.html#L.138-168" title="View source of the `link` method">[src]</a></aside>
             </dt>
             <dd>
                 <section><p>Extract new symbols from an intermediate representation and update the linker.</p>
@@ -161,11 +165,11 @@ development phase.</p>
 </article>
         </main>
 
-        <script type="text/javascript" src="./javascript/search.elm.js"></script>
-        <script type="text/javascript" src="./javascript/search-index.js"></script>
-        <script type="text/javascript" src="./javascript/search-metadata.js"></script>
-        <script type="text/javascript" src="./javascript/application.js"></script>
-        <script type="text/javascript" src="./javascript/prism.js"></script>
-        <script type="text/javascript" src="./javascript/prism-hooks.js" async defer></script>
+        <script src="./javascript/prism.js"></script>
+        <script src="./javascript/prism-hooks.js"></script>
+        <script src="./javascript/search.elm.js" defer></script>
+        <script src="./javascript/search-index.js" defer></script>
+        <script src="./javascript/search-metadata.js" defer></script>
+        <script src="./javascript/application.js" defer></script>
     </body>
 </html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+
+<html lang="en" prefix="og: http://ogp.me/ns#">
+    <head>
+        <base href="./../../../../../" />
+        <title>Kitab\Compiler\Target\DocTest\CodeBlockHandler\Definition from Kitab</title>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <meta http-equiv="content-type" content="text/javascript; charset=utf-8" />
+        <meta http-equiv="content-type" content="text/css; charset=utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <link rel="preload" href="./css/main.css" as="style" />
+        <link rel="preload" href="./javascript/prism.js" as="script" />
+        <link rel="preload" href="./javascript/prism-hooks.js" as="script" />
+        <link rel="preload" href="./javascript/search.elm.js" as="script" />
+        <link rel="preload" href="./javascript/search-index.js" as="script" />
+        <link rel="preload" href="./javascript/search-metadata.js" as="script" />
+        <link rel="preload" href="./javascript/application.js" as="script" />
+
+        <link rel="stylesheet" href="./css/main.css" media="all" />
+        <link rel="stylesheet" href="./css/prism.css" media="all" />
+
+        <link rel="icon" type="image/png" href="./resource/logo_32x32.png" sizes="32x32" />
+        <link rel="icon" type="image/png" href="./resource/logo_192x192.png" sizes="192x192" />
+
+        <meta name="generator" content="Kitab (https://hoa-project.net/)" />
+        <meta name="description" content="Kitab\Compiler\Target\DocTest\CodeBlockHandler\Definition from Kitab">
+
+        <meta property="og:title" content="Kitab\Compiler\Target\DocTest\CodeBlockHandler\Definition from Kitab" />
+        <meta property="og:type" content="website" />
+        <meta proprery="og:image" content="https://raw.githubusercontent.com/hoaproject/Kitab/master/resource/logo.svg?sanitize=true" />
+
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:creator" content="@hoaproject" />
+        <meta name="twitter:text:title" content="Kitab\Compiler\Target\DocTest\CodeBlockHandler\Definition from Kitab" />
+        <meta name="twitter:image:src" content="https://raw.githubusercontent.com/hoaproject/Kitab/master/resource/logo.svg?sanitize=true" />
+        <meta name="twitter:image:alt" content="Kitab" />
+    </head>
+    <body>
+        <div id="search" role="search">
+            <div>
+                <input type="search" placeholder="Initializing search…" disabled />
+            </div>
+        </div>
+
+        <main>
+            <aside>
+    <header>
+        <a href="./">
+            <img src="https://raw.githubusercontent.com/hoaproject/Kitab/master/resource/logo.svg?sanitize=true" alt="Home" />
+        </a>
+    </header>
+
+    <nav>
+        <h1><code><a href="./kitab/index.html">Kitab</a>\<wbr /><a href="./kitab/compiler/index.html">Compiler</a>\<wbr /><a href="./kitab/compiler/target/index.html">Target</a>\<wbr /><a href="./kitab/compiler/target/doctest/index.html">DocTest</a>\<wbr /><a href="./kitab/compiler/target/doctest/codeblockhandler/index.html">CodeBlockHandler</a></code></h1>
+
+                    <h2>Classes</h2>
+
+            <ul class="list--flat">
+                                    <li><a href="./kitab/compiler/target/doctest/codeblockhandler/IntoPHPTestCaseBody.html"><code>IntoPHPTestCaseBody</code></a></li>
+                                    <li><a href="./kitab/compiler/target/doctest/codeblockhandler/Php.html"><code>Php</code></a></li>
+                            </ul>
+        
+                    <h2>Interfaces</h2>
+
+            <ul class="list--flat">
+                                    <li><a href="./kitab/compiler/target/doctest/codeblockhandler/Definition.html"><code>Definition</code></a></li>
+                            </ul>
+        
+        
+            </nav>
+</aside>
+
+<article>
+    <h1>
+    Interface <code>Kitab\Compiler\Target\DocTest\CodeBlockHandler\Definition</code>
+    <aside>
+        <a href="./kitab/compiler/target/doctest/codeblockhandler/Definition.source.html#L.50-79" title="View source">[src]</a>
+    </aside>
+</h1>
+
+<pre><code class="language-php">interface Definition
+{
+    public function getDefinitionName(): string;
+    public function mightHandleCodeBlock(string $codeBlockType): bool;
+    public function compileToTestCaseBody(string $codeBlockType, string $codeBlockContent): string;
+}</code></pre>
+
+<section class="entity__description"><p>Define a code block handler.</p>
+<p>A code handler has a name, matches only some specific types, and is able to
+compile a code block content into a test case body.</p>
+<p>For a concrete implementation example, see the
+<a href="./kitab/compiler/target/doctest/codeblockhandler/Php.html"><code>Kitab\Compiler\Target\DocTest\CodeBlockHandler\Php</code></a>.</p>
+</section>
+
+
+    <h2 id="methods">Methods</h2>
+
+    <dl class="entity__children">
+                    <dt aria-label="getDefinitionName">
+                <code class="language-php">public function getDefinitionName(): string</code>
+                <aside><a href="./kitab/compiler/target/doctest/codeblockhandler/Definition.source.html#L.58-58" title="View source of the `getDefinitionName` method">[src]</a></aside>
+            </dt>
+            <dd>
+                <section><p>The name of a handler is used to differentiate test
+cases generated by different handlers.</p>
+<p>Be careful that these names can be used as PHP identifiers.</p>
+</section>
+            </dd>
+                    <dt aria-label="mightHandleCodeBlock">
+                <code class="language-php">public function mightHandleCodeBlock(string $codeBlockType): bool</code>
+                <aside><a href="./kitab/compiler/target/doctest/codeblockhandler/Definition.source.html#L.64-64" title="View source of the `mightHandleCodeBlock` method">[src]</a></aside>
+            </dt>
+            <dd>
+                <section><p>Check whether a code block might be compiled by this handler into a
+test case body based on its type.</p>
+</section>
+            </dd>
+                    <dt aria-label="compileToTestCaseBody">
+                <code class="language-php">public function compileToTestCaseBody(string $codeBlockType, string $codeBlockContent): string</code>
+                <aside><a href="./kitab/compiler/target/doctest/codeblockhandler/Definition.source.html#L.78-78" title="View source of the `compileToTestCaseBody` method">[src]</a></aside>
+            </dt>
+            <dd>
+                <section><p>The core of a handler: Compile a code block content into a test case
+body.</p>
+<p>The test case body must not include the test case “definition” (like
+<code>public function …</code>), nor its name, only the body.</p>
+<p>The code block type can be a single identifier, a list of identifiers
+with or without arguments. This is the raw code block type. It is up to
+the handler to parse it. The code block content is also the raw value
+from the documentation. No transformation is applied.</p>
+</section>
+            </dd>
+            </dl>
+</article>
+        </main>
+
+        <script src="./javascript/prism.js"></script>
+        <script src="./javascript/prism-hooks.js"></script>
+        <script src="./javascript/search.elm.js" defer></script>
+        <script src="./javascript/search-index.js" defer></script>
+        <script src="./javascript/search-metadata.js" defer></script>
+        <script src="./javascript/application.js" defer></script>
+    </body>
+</html>
