@@ -171,10 +171,10 @@ assert($handler-&gt;mightHandleCodeblock(''));
 $codeBlockType    = 'php';
 $codeBlockContent = 'assert(true);';
 $output           =
-'$this' . &quot;\n&quot; .
-'    -&gt;assert(function () {' . &quot;\n&quot; .
-'        \assert(\true);' . &quot;\n&quot; .
-'    });';
+    '$this' . &quot;\n&quot; .
+    '    -&gt;assert(function () {' . &quot;\n&quot; .
+    '        \assert(\true);' . &quot;\n&quot; .
+    '    });';
 
 assert($output === $handler-&gt;compileToTestCaseBody($codeBlockType, $codeBlockContent));
 </code></pre>
@@ -193,11 +193,11 @@ assert($output === $handler-&gt;compileToTestCaseBody($codeBlockType, $codeBlock
 $codeBlockType    = 'php,must_throw(E)';
 $codeBlockContent = 'assert(true);';
 $output           =
-'$this' . &quot;\n&quot; .
-'    -&gt;exception(function () {' . &quot;\n&quot; .
-'        \assert(\true);' . &quot;\n&quot; .
-'    })' . &quot;\n&quot; .
-'        -&gt;isInstanceOf(\E::class);';
+    '$this' . &quot;\n&quot; .
+    '    -&gt;exception(function () {' . &quot;\n&quot; .
+    '        \assert(\true);' . &quot;\n&quot; .
+    '    })' . &quot;\n&quot; .
+    '        -&gt;isInstanceOf(\E::class);';
 
 assert($output === $handler-&gt;compileToTestCaseBody($codeBlockType, $codeBlockContent));
 </code></pre>

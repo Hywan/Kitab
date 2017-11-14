@@ -73,7 +73,7 @@
     <h1>
     Class <code>Kitab\Bin\Bin</code>
     <aside>
-        <a href="./kitab/bin/Bin.source.html#L.46-117" title="View source">[src]</a>
+        <a href="./kitab/bin/Bin.source.html#L.56-133" title="View source">[src]</a>
     </aside>
 </h1>
 
@@ -86,7 +86,13 @@
     protected static function exitWith(string $message, int $code);
 }</code></pre>
 
-<section class="entity__description"></section>
+<section class="entity__description"><p>Run the sub commands of the <code>kitab</code> command.</p>
+<p>A sub command must be a class declared in the <a href="./kitab/Bin.html"><code>Kitab\Bin</code></a> namespace. Its
+<code>run</code> public method —the entry method— will be called to run the sub
+command.</p>
+<p>Any exception thrown will be outputed in <code>php://stderr</code> with a brilliant
+colour.</p>
+</section>
 
 
 
@@ -95,35 +101,37 @@
     <dl class="entity__children">
                     <dt aria-label="main">
                 <code class="language-php">public static function main()</code>
-                <aside><a href="./kitab/bin/Bin.source.html#L.48-66" title="View source of the `main` method">[src]</a></aside>
+                <aside><a href="./kitab/bin/Bin.source.html#L.61-79" title="View source of the `main` method">[src]</a></aside>
             </dt>
             <dd>
-                <section></section>
+                <section><p>Call the sub command.</p>
+</section>
             </dd>
                     <dt aria-label="setErrorHandler">
                 <code class="language-php">protected static function setErrorHandler()</code>
-                <aside><a href="./kitab/bin/Bin.source.html#L.68-72" title="View source of the `setErrorHandler` method">[src]</a></aside>
+                <aside><a href="./kitab/bin/Bin.source.html#L.84-88" title="View source of the `setErrorHandler` method">[src]</a></aside>
             </dt>
             <dd>
-                <section></section>
+                <section><p>Use the Hoa default error and exception handlers.</p>
+</section>
             </dd>
                     <dt aria-label="getRouter">
                 <code class="language-php">protected static function getRouter(): Hoa\Router\Cli</code>
-                <aside><a href="./kitab/bin/Bin.source.html#L.74-88" title="View source of the `getRouter` method">[src]</a></aside>
+                <aside><a href="./kitab/bin/Bin.source.html#L.90-104" title="View source of the `getRouter` method">[src]</a></aside>
             </dt>
             <dd>
                 <section></section>
             </dd>
                     <dt aria-label="getDispatcher">
                 <code class="language-php">protected static function getDispatcher(): Hoa\Dispatcher\ClassMethod</code>
-                <aside><a href="./kitab/bin/Bin.source.html#L.90-101" title="View source of the `getDispatcher` method">[src]</a></aside>
+                <aside><a href="./kitab/bin/Bin.source.html#L.106-117" title="View source of the `getDispatcher` method">[src]</a></aside>
             </dt>
             <dd>
                 <section></section>
             </dd>
                     <dt aria-label="exitWith">
                 <code class="language-php">protected static function exitWith(string $message, int $code)</code>
-                <aside><a href="./kitab/bin/Bin.source.html#L.103-116" title="View source of the `exitWith` method">[src]</a></aside>
+                <aside><a href="./kitab/bin/Bin.source.html#L.119-132" title="View source of the `exitWith` method">[src]</a></aside>
             </dt>
             <dd>
                 <section></section>

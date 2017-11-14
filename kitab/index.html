@@ -174,7 +174,7 @@ class C { }
 </code></pre>
 <p>There are only 2 special section names: <em>Examples</em>, and <em>Exceptions</em>. Use
 them to introduce one or more examples, and exceptions
-explanations. This is a common standard used by other tools.</p>
+explanations. This is a common standard used by many other tools.</p>
 <p>Any kind of entities can be documented: Classes, interfaces, traits,
 class attributes, constants, methods, and functions.</p>
 <p>Namespaces cannot be documented directly from the code, because of the
@@ -198,24 +198,32 @@ the page contains information about the entity or the namespace.</p>
 <h2>Block of codes</h2>
 <p>Documentation can contain block of codes. This is possible to specify
 the type of the block with this standard notation:</p>
-<pre>
-```type
+<pre><code>```type
 code
 ```
-</pre>
-<p>where <code>type</code> can be <code>php</code>, <code>sh</code>, <code>html</code>, <code>css</code> etc. It impacts the
-syntax highlighting.</p>
-<p>The <code>php</code> type is special since it indicates a potential test
-case. Indeed, all code blocks inside an Examples Section can be
-compiled into test suites with the <code>./bin/kitab test</code> command. We can
-control the expectation of the test case:</p>
+</code></pre>
+<p>where <code>type</code> can be <code>php</code>, <code>http</code>, <code>sh</code>, <code>html</code>, <code>css</code> etc.</p>
+<p>The type has 2 impacts:</p>
+<ol>
+<li>It specifies the syntax highlighting when rendering the
+documentation in HTML,</li>
+<li>It is an identifier for a potential code block handler. A code
+block handler is responsible to compile a code block content into
+a valid test.</li>
+</ol>
+<p>Indeed, all code blocks inside the Examples and Exceptions Sections
+can be compiled into test suites with the <code>./bin/kitab test</code>
+command. For instance, with the <code>php</code> code block type, one can specify
+the expectation of the test case:</p>
 <ul>
 <li>
 <code>php</code> indicates the test case must be a success,</li>
 <li>
-<code>php,ignore</code> indicates the test case must be skiped,</li>
+<code>php,ignore</code> indicates the test case must be skiped (only
+rendered, not tested),</li>
 <li>
-<code>php,must_throw</code> indicates the test case must throw an exception,</li>
+<code>php,must_throw</code> indicates the test case must throw an exception
+of any kind,</li>
 <li>
 <code>php,must_throw(E)</code> indicates the test case must throw an
 exception of kind <code>E</code>.</li>
@@ -234,6 +242,51 @@ function panic(string $message): RuntimeException
 {
     throw new RuntimeException($message);
 }
+</code></pre>
+<h2>Extensible</h2>
+<p>It is possible to write specific code block handlers. It means that
+you can write extensions to Kitab to compile your documentation into
+specific tests. To learn more, check the
+<a href="./kitab/compiler/target/doctest/codeblockhandler/Definition.html"><code>Kitab\Compiler\Target\DocTest\CodeBlockHandler\Definition</code></a> interface
+and implementations.</p>
+<h1>Configurations</h1>
+<p>It is possible to configure Kitab with external PHP files. The file
+names are free, but we recommend the following:</p>
+<ul>
+<li>
+<code>.kitab.target.html.php</code> to configure the compilation of the
+documentation to HTML,</li>
+<li>
+<code>.kitab.target.doctest.php</code> to configure the test of the
+documentation.</li>
+</ul>
+<p>Both files must respectively return an instance of the
+<a href="./kitab/compiler/target/html/Configuration.html"><code>Kitab\Compiler\Target\Html\Configuration</code></a> and
+<a href="./kitab/compiler/target/doctest/Configuration.html"><code>Kitab\Compiler\Target\DocTest\Configuration</code></a> classes.</p>
+<p>The following example illustrates a common <code>.kitab.target.html.php</code>
+file:</p>
+<pre><code class="language-php,ignore">$configuration = new Kitab\Compiler\Target\Html\Configuration();
+
+$configuration-&gt;defaultNamespace = 'Kitab';
+$configuration-&gt;logoURL          = 'https://example.org/logo.png';
+$configuration-&gt;projectName      = 'Kitab';
+$configuration-&gt;composerFile     = __DIR__ . '/composer.json';
+
+return $configuration;
+</code></pre>
+<p>The following example illustrates a common <code>.kitab.target.doctest.php</code>
+file:</p>
+<pre><code class="language-php,ignore">$configuration = new Kitab\Compiler\Target\DocTest();
+
+$configuration-&gt;autoloaderFile      = __DIR__ . '/vendor/autoload.php';
+$configuration-&gt;concurrentProcesses = 4;
+
+return $configuration;
+</code></pre>
+<p>Both commands <code>kitab compile</code> and <code>kitab test</code> accept an option named
+<code>--configuration-file</code> to use a particular configuration file for the
+defaults, e.g.:</p>
+<pre><code class="language-sh">$ ./bin/kitab compile --configuration-file .kitab.target.html.php --output-directory doc src
 </code></pre>
 </section>
     

@@ -104,6 +104,9 @@ use Kitab\Compiler\Target\DocTest;
 use Kitab\Finder;
 use RuntimeException;
 
+/**
+ * This `kitab` sub command compiles and runs the doctests.
+ */
 class Test extends Console\Dispatcher\Kit
 {
     /**
@@ -127,13 +130,10 @@ class Test extends Console\Dispatcher\Kit
      */
     public function run(): int
     {
-        $configuration       = new DocTest\Configuration();
-        $autoloader          = null;
-        $outputDirectory     = null;
-        $directoryToScan     = null;
-        $concurrentProcesses = 4;
-        $verbose             = false;
-        $compilationCache   = true;
+        $configuration   = new DocTest\Configuration();
+        $outputDirectory = null;
+        $directoryToScan = null;
+        $verbose         = false;
 
         while (false !== $c = $this-&gt;getOption($v)) {
             switch ($c) {
@@ -201,8 +201,16 @@ class Test extends Console\Dispatcher\Kit
             }
         }
 
+
         if (empty($configuration-&gt;autoloaderFile) &amp;&amp; true === file_exists('vendor' . DS . 'autoload.php')) {
-            $configuration-&gt;autoloaderFile = realpath('vendor' . DS . 'autoload.php');
+            $autoloaderFile = realpath('vendor' . DS . 'autoload.php');
+
+            // Use the existing `vendor/autoload.php` file if it is not the
+            // Kitab's one embedded in the PHAR to avoid double inclusion.
+            if (!(defined('KITAB_PHAR_NAME') &amp;&amp;
+                  file_get_contents($autoloaderFile) === file_get_contents(dirname(__DIR__, 2) . DS . 'vendor' . DS . 'autoload.php'))) {
+                $configuration-&gt;autoloaderFile = $autoloaderFile;
+            }
         }
 
         $this-&gt;parser-&gt;listInputs($directoryToScan);
@@ -267,7 +275,7 @@ class Test extends Console\Dispatcher\Kit
                 (!empty($configuration-&gt;autoloaderFile) ? 'require_once \'' . str_replace(&quot;'&quot;, &quot;\\'&quot;, realpath($configuration-&gt;autoloaderFile)) . '\';' : '')
             );
 
-            $autoloader = $temporaryAutoloader-&gt;getStreamName();
+            $configuration-&gt;autoloaderFile = $temporaryAutoloader-&gt;getStreamName();
         } else {
             $composerAutoloader = realpath(dirname(__DIR__, 4) . DS . 'autoload.php');
 

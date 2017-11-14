@@ -85,7 +85,7 @@ All these items are public. Use it as a regular structure.</p>
 <h1>Examples</h1>
 <p>Assuming the <code>foo</code> item is correctly declared:</p>
 <pre><code class="language-php">$configuration = new class () extends Kitab\Configuration {
-public $foo = null;
+    public $foo = null;
 };
 $configuration-&gt;foo = 'bar';
 
@@ -107,7 +107,7 @@ assert('bar' === $configuration-&gt;foo);
 If the configuration item is not set, it will be considered as <code>null</code>.</p>
 <h1>Examples</h1>
 <pre><code class="language-php">$configuration = new class () extends Kitab\Configuration {
-public $foo = null;
+    public $foo = null;
 };
 
 assert($configuration-&gt;foo === null);

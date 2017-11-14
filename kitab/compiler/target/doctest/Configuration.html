@@ -70,7 +70,7 @@
     <h1>
     Class <code>Kitab\Compiler\Target\DocTest\Configuration</code>
     <aside>
-        <a href="./kitab/compiler/target/doctest/Configuration.source.html#L.59-95" title="View source">[src]</a>
+        <a href="./kitab/compiler/target/doctest/Configuration.source.html#L.59-98" title="View source">[src]</a>
     </aside>
 </h1>
 
@@ -115,10 +115,13 @@ first time.</p>
             </dd>
                     <dt aria-label="codeBlockHandlerNames"><code class="language-php">public $codeBlockHandlerNames = [\Kitab\Compiler\Target\DocTest\CodeBlockHandler\Php::class];</code></dt>
             <dd>
-                <section><p>Code block handlers.</p>
-<p>List of code block handler class names. A handler is responsible to
-compile a code block content into a test case body. If you write your
-own code block handlers, it is the correct place to declare them.</p>
+                <section><p>Code block handler names.</p>
+<p>List of code block handler class names. All the listed classes must
+implement the
+<a href="./kitab/compiler/target/doctest/codeblockhandler/Definition.html"><code>Kitab\Compiler\Target\DocTest\CodeBlockHandler\Definition</code></a>
+interface. A handler is responsible to compile a code block content
+into a test case body. If you write your own code block handlers, it is
+the correct place to declare them.</p>
 <p>The code block handler for <code>php</code> code block type is already declared.</p>
 </section>
             </dd>
