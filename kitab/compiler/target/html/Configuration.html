@@ -57,11 +57,11 @@
                     <h2>Classes</h2>
 
             <ul class="list--flat">
+                                    <li><a href="./kitab/compiler/target/html/Templater.html"><code>Templater</code></a></li>
                                     <li><a href="./kitab/compiler/target/html/Configuration.html"><code>Configuration</code></a></li>
+                                    <li><a href="./kitab/compiler/target/html/Search.html"><code>Search</code></a></li>
                                     <li><a href="./kitab/compiler/target/html/Html.html"><code>Html</code></a></li>
                                     <li><a href="./kitab/compiler/target/html/Router.html"><code>Router</code></a></li>
-                                    <li><a href="./kitab/compiler/target/html/Search.html"><code>Search</code></a></li>
-                                    <li><a href="./kitab/compiler/target/html/Templater.html"><code>Templater</code></a></li>
                             </ul>
         
         
@@ -73,7 +73,7 @@
     <h1>
     Class <code>Kitab\Compiler\Target\Html\Configuration</code>
     <aside>
-        <a href="./kitab/compiler/target/html/Configuration.source.html#L.59-94" title="View source">[src]</a>
+        <a href="./kitab/compiler/target/html/Configuration.source.html#L.59-117" title="View source">[src]</a>
     </aside>
 </h1>
 
@@ -124,6 +124,24 @@ default, a placeholder is used.</p>
             <dd>
                 <section><p>Composer file.</p>
 <p>Use a specific Composer file to get PSR-4 mappings.</p>
+</section>
+            </dd>
+                    <dt aria-label="viewSourceLinkFormatter"><code class="language-php">public $viewSourceLinkFormatter = null;</code></dt>
+            <dd>
+                <section><p>View-source link formatter.</p>
+<p>A closure taking an entity
+(<a href="./kitab/compiler/intermediaterepresentation/Entity.html"><code>Kitab\Compiler\IntermediateRepresentation\Entity</code></a>) as input, and
+computing a relative or absolute URL as output. If <code>null</code>, a default
+formatter will be used.</p>
+<h1>Examples</h1>
+<p>The following example creates links to view source on a Github repository:</p>
+<pre><code class="language-php,ignore">define('GITHUB_BLOB', 'https://github.com/hoaproject/Kitab/blob/master/');
+
+$configuration = new Kitab\Compiler\Target\Html\Configuration();
+$configuration-&gt;viewSourceLinkFormatter = function (Kitab\Compiler\IntermediateRepresentation\Entity $entity): string {
+    return GITHUB_BLOB . $entity-&gt;file-&gt;name . '#L' . $entity-&gt;lineStart;
+};
+</code></pre>
 </section>
             </dd>
             </dl>

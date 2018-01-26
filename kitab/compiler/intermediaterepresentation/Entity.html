@@ -57,19 +57,19 @@
                     <h2>Classes</h2>
 
             <ul class="list--flat">
-                                    <li><a href="./kitab/compiler/intermediaterepresentation/Attribute.html"><code>Attribute</code></a></li>
-                                    <li><a href="./kitab/compiler/intermediaterepresentation/Class_.html"><code>Class_</code></a></li>
                                     <li><a href="./kitab/compiler/intermediaterepresentation/Constant.html"><code>Constant</code></a></li>
+                                    <li><a href="./kitab/compiler/intermediaterepresentation/Type.html"><code>Type</code></a></li>
+                                    <li><a href="./kitab/compiler/intermediaterepresentation/Class_.html"><code>Class_</code></a></li>
                                     <li><a href="./kitab/compiler/intermediaterepresentation/Documentation.html"><code>Documentation</code></a></li>
-                                    <li><a href="./kitab/compiler/intermediaterepresentation/Entity.html"><code>Entity</code></a></li>
                                     <li><a href="./kitab/compiler/intermediaterepresentation/File.html"><code>File</code></a></li>
-                                    <li><a href="./kitab/compiler/intermediaterepresentation/Function_.html"><code>Function_</code></a></li>
-                                    <li><a href="./kitab/compiler/intermediaterepresentation/Interface_.html"><code>Interface_</code></a></li>
                                     <li><a href="./kitab/compiler/intermediaterepresentation/Into.html"><code>Into</code></a></li>
                                     <li><a href="./kitab/compiler/intermediaterepresentation/Method.html"><code>Method</code></a></li>
-                                    <li><a href="./kitab/compiler/intermediaterepresentation/Parameter.html"><code>Parameter</code></a></li>
+                                    <li><a href="./kitab/compiler/intermediaterepresentation/Attribute.html"><code>Attribute</code></a></li>
+                                    <li><a href="./kitab/compiler/intermediaterepresentation/Interface_.html"><code>Interface_</code></a></li>
+                                    <li><a href="./kitab/compiler/intermediaterepresentation/Function_.html"><code>Function_</code></a></li>
+                                    <li><a href="./kitab/compiler/intermediaterepresentation/Entity.html"><code>Entity</code></a></li>
                                     <li><a href="./kitab/compiler/intermediaterepresentation/Trait_.html"><code>Trait_</code></a></li>
-                                    <li><a href="./kitab/compiler/intermediaterepresentation/Type.html"><code>Type</code></a></li>
+                                    <li><a href="./kitab/compiler/intermediaterepresentation/Parameter.html"><code>Parameter</code></a></li>
                             </ul>
         
                     <h2>Interfaces</h2>
@@ -86,7 +86,7 @@
     <h1>
     Class <code>Kitab\Compiler\IntermediateRepresentation\Entity</code>
     <aside>
-        <a href="./kitab/compiler/intermediaterepresentation/Entity.source.html#L.47-148" title="View source">[src]</a>
+        <a href="./kitab/compiler/intermediaterepresentation/Entity.source.html#L.47-149" title="View source">[src]</a>
     </aside>
 </h1>
 
@@ -118,7 +118,8 @@ class, interface, trait, function…</p>
     <dl class="entity__children">
                     <dt aria-label="file"><code class="language-php">public $file</code></dt>
             <dd>
-                <section><p>File name containing the entity.</p>
+                <section><p>File containing the entity, as an instance of
+<a href="./kitab/compiler/intermediaterepresentation/File.html"><code>Kitab\Compiler\IntermediateRepresentation\File</code></a>.</p>
 </section>
             </dd>
                     <dt aria-label="lineStart"><code class="language-php">public $lineStart = 0;</code></dt>
@@ -149,7 +150,7 @@ class, interface, trait, function…</p>
     <dl class="entity__children">
                     <dt aria-label="getNamespaceName">
                 <code class="language-php">public function getNamespaceName(): string</code>
-                <aside><a href="./kitab/compiler/intermediaterepresentation/Entity.source.html#L.91-98" title="View source of the `getNamespaceName` method">[src]</a></aside>
+                <aside><a href="./kitab/compiler/intermediaterepresentation/Entity.source.html#L.92-99" title="View source of the `getNamespaceName` method">[src]</a></aside>
             </dt>
             <dd>
                 <section><p>The name of the entity without the short name, i.e. only the namespaces.</p>
@@ -162,7 +163,7 @@ assert($class-&gt;getNamespaceName() === 'Foo\\Bar');
             </dd>
                     <dt aria-label="getShortName">
                 <code class="language-php">public function getShortName(): string</code>
-                <aside><a href="./kitab/compiler/intermediaterepresentation/Entity.source.html#L.111-118" title="View source of the `getShortName` method">[src]</a></aside>
+                <aside><a href="./kitab/compiler/intermediaterepresentation/Entity.source.html#L.112-119" title="View source of the `getShortName` method">[src]</a></aside>
             </dt>
             <dd>
                 <section><p>The name of the entity without the namespaces, only the short name.</p>
@@ -175,7 +176,7 @@ assert($class-&gt;getShortName() === 'Baz');
             </dd>
                     <dt aria-label="inNamespace">
                 <code class="language-php">public function inNamespace(): bool</code>
-                <aside><a href="./kitab/compiler/intermediaterepresentation/Entity.source.html#L.136-139" title="View source of the `inNamespace` method">[src]</a></aside>
+                <aside><a href="./kitab/compiler/intermediaterepresentation/Entity.source.html#L.137-140" title="View source of the `inNamespace` method">[src]</a></aside>
             </dt>
             <dd>
                 <section><p>An entity is in a namespace if its fully-qualified name contains at
@@ -193,7 +194,7 @@ assert(false === $classB-&gt;inNamespace());
             </dd>
                     <dt aria-label="getType">
                 <code class="language-php">public static function getType(): string</code>
-                <aside><a href="./kitab/compiler/intermediaterepresentation/Entity.source.html#L.144-147" title="View source of the `getType` method">[src]</a></aside>
+                <aside><a href="./kitab/compiler/intermediaterepresentation/Entity.source.html#L.145-148" title="View source of the `getType` method">[src]</a></aside>
             </dt>
             <dd>
                 <section><p>Return the type of the entity defined by the <code>TYPE</code> class constant.</p>

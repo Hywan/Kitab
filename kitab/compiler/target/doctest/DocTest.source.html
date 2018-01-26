@@ -130,7 +130,7 @@ class DocTest implements Target
     {
         $testSuites =
             '&lt;?php' . &quot;\n\n&quot; .
-            'declare(strict_types=1);' . &quot;\n\n&quot;;
+            'declare(strict_types=1);';
         $anyTestSuite = false;
 
         foreach ($file as $representation) {
@@ -203,7 +203,7 @@ class DocTest implements Target
 
         return
             sprintf(
-                'namespace Kitab\Generated\DocTest%s' . &quot;\n&quot; . '{' . &quot;\n\n&quot; .
+                &quot;\n\n&quot; . 'namespace Kitab\Generated\DocTest%s' . &quot;\n&quot; . '{' . &quot;\n\n&quot; .
                 'class %s extends \Kitab\DocTest\Suite' . &quot;\n&quot; .
                 '{',
                 $entity-&gt;inNamespace() ? '\\' . $entity-&gt;getNamespaceName() : '',

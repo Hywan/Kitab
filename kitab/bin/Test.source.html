@@ -113,14 +113,15 @@ class Test extends Console\Dispatcher\Kit
      * Options description.
      */
     protected $options = [
-        ['configuration-file',   Console\GetOption::REQUIRED_ARGUMENT, 'c'],
-        ['autoloader',           Console\GetOption::REQUIRED_ARGUMENT, 'l'],
-        ['output-directory',     Console\GetOption::REQUIRED_ARGUMENT, 'o'],
-        ['concurrent-processes', Console\GetOption::REQUIRED_ARGUMENT, 'p'],
-        ['bypass-cache',         Console\GetOption::NO_ARGUMENT,       'C'],
-        ['verbose',              Console\GetOption::NO_ARGUMENT,       'v'],
-        ['help',                 Console\GetOption::NO_ARGUMENT,       'h'],
-        ['help',                 Console\GetOption::NO_ARGUMENT,       '?']
+        ['configuration-file',       Console\GetOption::REQUIRED_ARGUMENT, 'c'],
+        ['autoloader',               Console\GetOption::REQUIRED_ARGUMENT, 'l'],
+        ['output-directory',         Console\GetOption::REQUIRED_ARGUMENT, 'o'],
+        ['concurrent-processes',     Console\GetOption::REQUIRED_ARGUMENT, 'p'],
+        ['bypass-cache',             Console\GetOption::NO_ARGUMENT,       'C'],
+        ['atoum-configuration-file', Console\GetOption::REQUIRED_ARGUMENT, 'a'],
+        ['verbose',                  Console\GetOption::NO_ARGUMENT,       'v'],
+        ['help',                     Console\GetOption::NO_ARGUMENT,       'h'],
+        ['help',                     Console\GetOption::NO_ARGUMENT,       '?']
     ];
 
 
@@ -180,6 +181,15 @@ class Test extends Console\Dispatcher\Kit
 
                 case 'C':
                     $configuration-&gt;bypassCache = $v;
+
+                    break;
+
+                case 'a':
+                    if (false === file_exists($v)) {
+                        throw new RuntimeException('Extra atoum configuration file `' . $v . '` does not exist.');
+                    }
+
+                    $configuration-&gt;atoumConfigurationFile = $v;
 
                     break;
 
@@ -310,6 +320,12 @@ class Test extends Console\Dispatcher\Kit
             ' --directories ' .
                 escapeshellarg($outputDirectory);
 
+        if (!empty($configuration-&gt;atoumConfigurationFile)) {
+            $command .=
+                ' --configurations ' .
+                    escapeshellarg($configuration-&gt;atoumConfigurationFile);
+        }
+
         $processus = new Processus($command, null, null, getcwd(), $_SERVER);
         $processus-&gt;on(
             'input',
@@ -355,6 +371,8 @@ class Test extends Console\Dispatcher\Kit
                 'o'    =&gt; 'Directory that will receive the generated documentation test suites.',
                 'p'    =&gt; 'Maximum concurrent processes that can run.',
                 'C'    =&gt; 'Bypass the cache; compile test suites like it is for the first time.',
+                'a'    =&gt; 'atoum is used to execute the generated tests. This option adds an ' .
+                          'extra atoum configuration file after the one embedded inside Kitab.',
                 'v'    =&gt; 'Be verbose (add some debug information).',
                 'help' =&gt; 'This help.'
             ]);

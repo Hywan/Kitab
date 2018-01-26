@@ -57,8 +57,8 @@
                     <h2>Classes</h2>
 
             <ul class="list--flat">
-                                    <li><a href="./kitab/compiler/target/doctest/Configuration.html"><code>Configuration</code></a></li>
                                     <li><a href="./kitab/compiler/target/doctest/DocTest.html"><code>DocTest</code></a></li>
+                                    <li><a href="./kitab/compiler/target/doctest/Configuration.html"><code>Configuration</code></a></li>
                             </ul>
         
         
@@ -70,7 +70,7 @@
     <h1>
     Class <code>Kitab\Compiler\Target\DocTest\Configuration</code>
     <aside>
-        <a href="./kitab/compiler/target/doctest/Configuration.source.html#L.59-98" title="View source">[src]</a>
+        <a href="./kitab/compiler/target/doctest/Configuration.source.html#L.59-109" title="View source">[src]</a>
     </aside>
 </h1>
 
@@ -123,6 +123,16 @@ interface. A handler is responsible to compile a code block content
 into a test case body. If you write your own code block handlers, it is
 the correct place to declare them.</p>
 <p>The code block handler for <code>php</code> code block type is already declared.</p>
+</section>
+            </dd>
+                    <dt aria-label="atoumConfigurationFile"><code class="language-php">public $atoumConfigurationFile = null;</code></dt>
+            <dd>
+                <section><p>atoum configuration file.</p>
+<p>Kitab uses <a href="http://atoum.org/">atoum</a> to execute tests. Kitab comes
+with a default atoum configuration file, but it is possible to add
+another one that will be executed just after with the same context
+(variables &amp; co.). It is useful to add specific atoum extensions for
+instance.</p>
 </section>
             </dd>
             </dl>

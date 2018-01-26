@@ -120,6 +120,20 @@ class Html implements Target
 
         $this-&gt;_configuration = $configuration;
 
+        if (null === $this-&gt;_configuration-&gt;viewSourceLinkFormatter) {
+            $this-&gt;_configuration-&gt;viewSourceLinkFormatter = function (IntermediateRepresentation\Entity $entity): string {
+                return
+                    '.' .
+                    $this-&gt;_router-&gt;unroute(
+                        'entity',
+                        [
+                            'namespaceName' =&gt; mb_strtolower(str_replace('\\', '/', $entity-&gt;getNamespaceName())),
+                            'shortName'     =&gt; $entity-&gt;getShortName() . '.source'
+                        ]
+                    );
+            };
+        }
+
         return;
     }
 
@@ -216,7 +230,7 @@ class Html implements Target
         $outputSource = 'hoa://Kitab/Output/' . $urlSource;
 
         $data-&gt;url             = new StdClass();
-        $data-&gt;url-&gt;viewSource = '.' . $urlSource;
+        $data-&gt;url-&gt;viewSource = ($this-&gt;_configuration-&gt;viewSourceLinkFormatter)($entity);
 
         Directory::create(dirname($output));
 

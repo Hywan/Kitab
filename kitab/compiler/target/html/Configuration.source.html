@@ -122,7 +122,7 @@ class Configuration extends Kitab\Configuration
      * the user will open the documentation, she will be automatically
      * redirected to the default namespace.
      */
-    public $defaultNamespace = null;
+    public $defaultNamespace        = null;
 
     /**
      * URL to the logo of the documentation.
@@ -131,21 +131,44 @@ class Configuration extends Kitab\Configuration
      * possible to customise the logo by using this configuration item. By
      * default, a placeholder is used.
      */
-    public $logoURL          = 'https://placehold.it/150x150';
+    public $logoURL                 = 'https://placehold.it/150x150';
 
     /**
      * Project name.
      *
      * This configuration item represents the name of the project being documented.
      */
-    public $projectName      = '(unknown)';
+    public $projectName             = '(unknown)';
 
     /**
      * Composer file.
      *
      * Use a specific Composer file to get PSR-4 mappings.
      */
-    public $composerFile     = null;
+    public $composerFile            = null;
+
+    /**
+     * View-source link formatter.
+     *
+     * A closure taking an entity
+     * (`Kitab\Compiler\IntermediateRepresentation\Entity`) as input, and
+     * computing a relative or absolute URL as output. If `null`, a default
+     * formatter will be used.
+     *
+     * # Examples
+     *
+     * The following example creates links to view source on a Github repository:
+     *
+     * ```php,ignore
+     * define('GITHUB_BLOB', 'https://github.com/hoaproject/Kitab/blob/master/');
+     *
+     * $configuration = new Kitab\Compiler\Target\Html\Configuration();
+     * $configuration-&gt;viewSourceLinkFormatter = function (Kitab\Compiler\IntermediateRepresentation\Entity $entity): string {
+     *     return GITHUB_BLOB . $entity-&gt;file-&gt;name . '#L' . $entity-&gt;lineStart;
+     * };
+     * ```
+     */
+    public $viewSourceLinkFormatter = null;
 }
 </code></pre>
 </article>
